@@ -14,7 +14,7 @@ function ajaxRequest(method,call,response,data,file) {
         if (xmlhttp.readyState==4 && xmlhttp.status==200) {
             if(xmlhttp.responseText != '') eval(response + "('"+xmlhttp.responseText+"')");
         }
-    }
+    };
     var requested = new Date().getTime();
     xmlhttp.open(method,"/quizatthedicks/ajax.php?endpoint="+call+"&data="+encodeURIComponent(data)+"&requested="+requested,true);
     if(file) {
@@ -28,7 +28,7 @@ function ajaxRequest(method,call,response,data,file) {
 function markAnswer(quizId, teamId, answerId, round,correct) {
     var data = JSON.stringify({quizId:quizId,teamId:teamId,answerId:answerId,correct:correct,round:round});
 
-    ajaxRequest('GET','mark_answer','answerMarked',data);
+    ajaxRequest('GET','markAnswer','answerMarked',data);
 }
 
 function answerMarked(json) {
@@ -47,4 +47,38 @@ function answerMarked(json) {
     }
 
 
+}
+
+function saveQuestions(quizMasterId, quizId,roundId) {
+    var questions = [];
+
+    $('form#round_' + roundId + '_form :input[type=text]').each(function(){
+       questions.push(this.value);
+    });
+    var json = JSON.stringify({host:quizMasterId,quiz:quizId,round:roundId, question:questions});
+
+    ajaxRequest('GET','addRoundQuestions','questionsAddedForRound',json);
+
+}
+
+function questionsAddedForRound(json) {
+    var response = JSON.parse(json);
+    var questions = response.questions;
+    var html = '';
+    console.log(questions);
+    $(questions).each(function() {
+        html += '<li>' + this.title + '</li>';
+    });
+    html += '';
+
+    $('#round_' + response.round + '_form').trigger('reset');
+    var inputs = $('#round_' + response.round + '_form :input[type=text]');
+    var i = 1;
+
+    while(i < inputs.length) {
+        $(inputs[i]).remove();
+        i++;
+    }
+
+    $('#round_' + response.round + '_questions_list').html(html);
 }

@@ -6,7 +6,10 @@
  * Time: 18:12
  */
 include_once("bootstrap.php");
+if(isset($_GET['clear'])) {
+    $_SESSION['quizMasterId'] = null;
 
+}
 $canCreateQuiz = false;
 $quizMasterId = null;
 $authDao = new AuthTokenDataAccessService(new PDOConn());

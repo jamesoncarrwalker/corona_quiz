@@ -63,7 +63,7 @@ if($canCreateQuiz) {
     <script type="text/javascript">
         function addQuestion(round) {
 
-            $('.' + round).last().after('<input class="' + round + '" name="question[]" type="text">');
+            $('.' + round).last().after('<input class="' + round + ' round_question" name="question[]" type="text">');
 
         }
     </script>
@@ -72,30 +72,26 @@ if($canCreateQuiz) {
 
         <div class="col-xs-12 col-sm-4 col-md-3 col-lg-3">
             <?echo '<h3>Round: ' . $round->title . '</h3>'?>
-            <ul class="list-unstyled">
+            <ol id="round_<?echo $round->UUID?>_questions_list" >
                 <?
                     $roundQuestions = array_filter(array_map(function($question) use ($round) {
                         return $question->round == $round->UUID ? $question : null;
                     },$questions ));
-
-
 
                 foreach($roundQuestions as $q) {
                     echo '<li>' . $q->title . '</li>';
                 }
 
                 ?>
-            </ul>
+            </ol>
 
-            <form class="form-inline" action="manageQuiz.php<?echo '?quiz_id=' . $_GET['quiz_id'] ?>" method="post">
+            <form class="form-inline" id="round_<?echo $round->UUID ?>_form">
                 <div class="form-group mb-2">
-                    <input class="<?echo $round->UUID ?>" name="question[]" type="text">
+                    <input class="<?echo $round->UUID ?> round_question" name="question[]" type="text">
                     <button class="btn btn-sm btn-success" type="button" onclick="addQuestion('<?echo $round->UUID?>')">Add Question</button>
-                    <input type="hidden" value="<?echo $round->UUID ?>" name="round">
-                    <input type="hidden" value="<?echo $_GET['quiz_id'] ?>" name="quiz_id">
                     </br>
                     </br>
-                    <button name="addQuestions" type="submit" class="btn btn-primary mb-2">Save Questions</button>
+                    <a name="addQuestions" onclick="saveQuestions('<?echo $_SESSION['quizMasterId']?>','<?echo $_GET['quiz_id'] ?>','<?echo $round->UUID?>')" class="btn btn-primary mb-2">Save Questions</a>
                 </div>
             </form>
         </div>

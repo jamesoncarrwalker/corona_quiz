@@ -16,6 +16,7 @@
                     <?if(isset($_SESSION['quizMasterId'])){?>
 
                         </li><a href="marksheet.php">Marksheet</a></li>
+                        </li><a href="create.php">Create a quiz</a></li>
                     <?}?>
                 </ul>
             </div>
