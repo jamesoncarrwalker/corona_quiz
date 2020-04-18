@@ -15,7 +15,7 @@ class AnswerDataAccessService {
     }
 
     public function getTeamAnswersForRound(string $team,string $quiz,string $round) {
-        $q = $this->conn->prepare(("SELECT answer.*,question.title
+        $q = $this->conn->prepare("SELECT answer.*, question.title
                                     FROM answer
                                     INNER JOIN question
                                     ON (question.quiz_UUID = answer.quiz_UUID
@@ -24,13 +24,27 @@ class AnswerDataAccessService {
                                         )
                                     WHERE answer.quiz_UUID = :quiz
                                     AND answer.team_UUID = :team
-                                    AND question.round = :round
-                                     "));
+                                    AND question.round = :round");
         $q->bindParam(':quiz',$quiz,PDO::PARAM_STR);
         $q->bindParam(':team',$team,PDO::PARAM_STR);
         $q->bindParam(':round',$round,PDO::PARAM_STR);
         $q->execute();
         return $q->fetchAll();
+    }
+
+    public function getQuestionsWithAnswersForRound(string $quiz,string $round) {
+        $q = $this->conn->prepare("SELECT question.UUID,question.title AS question, answer.*
+                                    FROM answer
+                                    INNER JOIN question
+                                    ON (question.quiz_UUID = answer.quiz_UUID
+                                        AND answer.question_UUID = question.UUID
+                                        )
+                                    WHERE answer.quiz_UUID = :quiz
+                                    AND question.round = :round");
+        $q->bindParam(':quiz',$quiz,PDO::PARAM_STR);
+        $q->bindParam(':round',$round,PDO::PARAM_STR);
+        $q->execute();
+        return $q->fetchAll(PDO::FETCH_GROUP);
     }
 
     public function addTeamAnswers(string $team, string $quiz, array $answers) {
@@ -106,5 +120,6 @@ class AnswerDataAccessService {
         return $q->fetchColumn();
 
     }
+
 
 }

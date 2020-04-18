@@ -61,13 +61,20 @@ body{
 
 }
 
-.panel,.panel_list li a {
+.panel_list li.active, .panel.active {
+    background-color:#5DADE2;
+}
+
+.panel, .panel_list li a, .panel a {
     text-align: center;
     color:white;
 }
 
+
+
 .answer_list li {
     padding: 5px;
+    background-color: transparent;
 }
 
 .award_glyph {

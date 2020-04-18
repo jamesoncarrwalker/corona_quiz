@@ -12,7 +12,7 @@ $quizSelected = false;
 $quizMasterId = null;
 $pdo = new PDOConn();
 $teamScores = [];
-
+$round = null;
 if(isset($_POST['auth'])) {
     $authDao = new AuthTokenDataAccessService($pdo);
     if ($quizMasterId = $authDao->checkQuizMasterCredentials($_POST)) {
@@ -68,9 +68,10 @@ if($canMarkQuiz && !isset($_GET['quiz_id'])) {
 
 <div class="container">
     <div class="row">
-        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center">
-            <h1><?echo $quizSelected ? $quiz->title : 'Welcome Quiz Master' ?></h1>
-            <h2><?echo  $canMarkQuiz ? ($quizSelected ? 'Get marking' : 'Choose a quiz') : 'Please log in'?></h2>
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 ">
+            <h2 class="text-center"><?echo $quizSelected ? $quiz->title : 'Welcome Quiz Master' ?></h2>
+<!--            <h3>--><?//echo  $canMarkQuiz ? ($quizSelected ? 'Get marking' : 'Choose a quiz') : 'Please log in'?><!--</h3>-->
+
         </div>
     </div>
     <?if($canMarkQuiz){?>
@@ -83,50 +84,62 @@ if($canMarkQuiz && !isset($_GET['quiz_id'])) {
             </ul>
 
         <?} else {?>
-            <h3>Totals</h3>
-            <ul class="list-inline list-unstyled panel_list">
-                <?foreach($teams as $team){?>
-                    <li class="panel"><?echo $team->team_name?> :  <span id="<?echo $team->UUID . '_total_score'?>"><?
-
-                       echo abs($answerDao->getTeamScoreForQuiz($team->UUID,$quiz->UUID)) ?>
+            <div class="col-xs-12 col-sm-3 col-md-2 col-lg-2 ">
+                <ul class="list-unstyled">
+                    <li class="section_heading">Rounds: </li>
+                    <?foreach($rounds as $r){?>
+                        <li class=" panel <? if(isset($round) && $round->UUID == $r->UUID) echo 'active' ?>"><a href="marksheet.php?quiz_id=<?echo $quiz->UUID?>&round=<?echo $r->UUID?>"><?echo $r->title?></a></li>
+                    <?}?>
+                </ul>
+            </div>
+            <div class="col-xs-12 col-sm-9 col-md-10 col-lg-10 edge left">
+                <h4 class="section_heading">Scores</h4>
+                <ul class="list-inline list-unstyled panel_list">
+                    <?foreach($teams as $team){?>
+                        <li class="panel">
+                            <span class="section_heading"><?echo $team->team_name?></span></br>
+                            Total: <span id="<?echo $team->UUID . '_total_score'?>">
+                                <? echo abs($answerDao->getTeamScoreForQuiz($team->UUID,$quiz->UUID)) ?>
                             </span>
-                    </li>
-                <?}?>
-            </ul>
 
-                    <h3 class="section_heading">Select a round to mark</h3>
-                    <ul class="list-inline list-unstyled panel_list">
-                        <?foreach($rounds as $r){?>
-                            <li><a href="marksheet.php?quiz_id=<?echo $quiz->UUID?>&round=<?echo $r->UUID?>"><?echo $r->title?></a></li>
-                        <?}?>
-                    </ul>
+                            <?if($roundSelected) {?>
+                                </br>
+                                <?echo $round->title?> round: <span id="<?echo $team->UUID . '_round_total_score'?>"><?echo $answerDao->getTeamScoreForQuizRound($team->UUID,$quiz->UUID,$round->UUID)?></span>
+                            <?}?>
+                        </li>
+                    <?}?>
+                </ul>
+
                 <?if($roundSelected) {?>
-                    <h3 class="section_heading"><?echo $round->title?></h3>
+                    <ol class="list-unstyled">
 
-                    <ul class="list-unstyled list-inline">
-                        <?foreach($teams as $team){?>
-                            <li><h5 class="panel"><?echo  $team->team_name?></h5>
-                                <ol class="answer_list">
-                                    <?
-                                    $teamAnswers = $answerDao->getTeamAnswersForRound($team->UUID,$quiz->UUID,$round->UUID);
-                                    foreach($teamAnswers as $answer) {
-                                        echo '<li>
-                                                    <ul class="list-unstyled">
-                                                    <li class="section_heading">' . $answer->title . '?</li>
-                                                        <li>' . $answer->answer . '
-                                                        <span id="' . $answer->UUID . '_correct" class="glyphicon glyphicon-ok marksheet award_glyph ' . ($answer->points > 0 ? 'correct' : '') .' " onclick="markAnswer(\'' . $quiz->UUID . '\',\'' . $team->UUID . '\', \'' . $answer->UUID . '\',\'' . $round->UUID . '\', true)"></span>
-                                                        <span id="' . $answer->UUID . '_incorrect" class="glyphicon glyphicon-remove marksheet award_glyph ' . ($answer->points == -1 ? 'incorrect' : '') .'" onclick="markAnswer(\'' . $quiz->UUID . '\',\'' . $team->UUID . '\', \'' . $answer->UUID . '\',\'' . $round->UUID . '\'  , false)"></span></li>
-                                                    </ul>
-                                                </li>';
-                                    }
+                        <?
+                        $teamAnswers = $answerDao->getQuestionsWithAnswersForRound($quiz->UUID,$round->UUID);
 
-                                    ?>
-                                </ol>
-                             <h5 class="panel">Score: <span id="<?echo $team->UUID . '_round_total_score'?>"><?echo $answerDao->getTeamScoreForQuizRound($team->UUID,$quiz->UUID,$round->UUID)?></span></h5>
+                        foreach($teamAnswers as $questionId => $answers) {?>
+                            <li class="col-xs-12 col-sm-12 col-md-12 panel"><?  echo ($answers[0]->question ?? '....')?>?</li>
+
+                            <li class="col-xs-12 col-sm-12 col-md-12">
+                                <ul class="list-unstyled list-inline  ">
+                                    <?foreach($answers as $teamAnswer) {?>
+                                        <li class="col-xs-6 col-sm-4 col-md-3 col-lg-3 ">
+                                            <p class="section_heading"><?echo $teams[$teamAnswer->team_UUID]->team_name ?? 'Someone'?></p>
+                                            <p><?echo $teamAnswer->answer ?? ''?></p>
+
+                                            <span id="<?echo $teamAnswer->UUID?>_correct" class="glyphicon glyphicon-ok marksheet award_glyph <?echo ($teamAnswer->points > 0 ? 'correct' : '')?> " onclick="markAnswer('<?echo $quiz->UUID ?>','<?echo $teamAnswer->team_UUID?>', '<?echo $teamAnswer->UUID ?>','<?echo $round->UUID?>', true)"></span>
+
+                                            <span id="<?echo $teamAnswer->UUID?>_incorrect" class="glyphicon glyphicon-remove marksheet award_glyph <? echo ($teamAnswer->points == -1 ? 'incorrect' : '')?>" onclick="markAnswer('<?echo $quiz->UUID?>','<?echo $teamAnswer->team_UUID?>', '<?echo $teamAnswer->UUID?>','<?echo $round->UUID?>', false)"></span>
+                                        </li>
+                                    <?}?>
+
+                                </ul>
                             </li>
+
                         <?}?>
-                    </ul>
+                    </ol>
                 <?}?>
+            </div>
+
         <?}?>
         </div>
 

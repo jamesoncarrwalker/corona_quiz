@@ -39,9 +39,9 @@ class TeamDataAccessService {
     }
 
     public function getTeamsForQuiz(string $quiz) {
-        $q = $this->conn->prepare("SELECT * FROM team WHERE quiz_UUID = :quiz");
+        $q = $this->conn->prepare("SELECT team.UUID, team.* FROM team WHERE quiz_UUID = :quiz");
         $q->execute([':quiz' => $quiz]);
-        return $q->fetchAll();
+        return $q->fetchAll(PDO::FETCH_UNIQUE);
     }
 
     public function getTeamPointsForQuizByRound(string $quiz, string $team) {
