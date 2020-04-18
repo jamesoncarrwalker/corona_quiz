@@ -34,8 +34,6 @@ class AuthTokenDataAccessService {
         $q->execute();
         $row = $q->fetch();
 
-        if(!isset($row)) return false;
-
-        return true;
+        return $row->UUID ?? false;
     }
 }

@@ -42,6 +42,12 @@ class QuizDataAccessService {
         return $q->fetchAll();
     }
 
+    public function getUserCreatedQuizzes(string $user) {
+        $q = $this->conn->prepare("SELECT * FROM quiz WHERE host = :host");
+        $q->execute([':host' => $user]);
+        return $q->fetchAll();
+    }
+
     public function getQuizById(string $id) {
         $q = $this->conn->prepare("SELECT * FROM quiz WHERE UUID = :id");
         $q->bindParam(':id', $id,PDO::PARAM_STR);

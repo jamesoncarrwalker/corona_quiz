@@ -36,7 +36,7 @@ $answerDao = new AnswerDataAccessService($pdo);
 
 if($canMarkQuiz && !isset($_GET['quiz_id'])) {
 
-    $quizes = $quizDao->getQuizzes();
+    $quizzes = $quizDao->getUserCreatedQuizzes($quizMasterId);
     $quizSelected = false;
 } else if($canMarkQuiz) {
     $quiz = $quizDao->getQuizById($_GET['quiz_id']);
@@ -77,7 +77,7 @@ if($canMarkQuiz && !isset($_GET['quiz_id'])) {
         <div class="row">
         <?if(!$quizSelected){?>
             <ul class="list-unstyled list-inline panel_list">
-                <?foreach ($quizes as $quiz) {?>
+                <?foreach ($quizzes as $quiz) {?>
                     <li><a href="marksheet.php?quiz_id=<?echo $quiz->UUID?>"><?echo $quiz->title?></a>  (<?echo $quiz->invitation_code ?>)</li>
                 <?}?>
             </ul>
