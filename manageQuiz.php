@@ -67,36 +67,40 @@ if($canCreateQuiz) {
 
         }
     </script>
+    <div class="row">
     <?foreach($rounds as $round) {?>
 
-    <div class="row">
-        <?echo '<h3>Round: ' . $round->title . '</h3>'?>
-        <ul class="list-unstyled">
-            <?
-                $roundQuestions = array_filter(array_map(function($question) use ($round) {
-                    return $question->round == $round->UUID ? $question : null;
-                },$questions ));
+        <div class="col-xs-12 col-sm-4 col-md-3 col-lg-3">
+            <?echo '<h3>Round: ' . $round->title . '</h3>'?>
+            <ul class="list-unstyled">
+                <?
+                    $roundQuestions = array_filter(array_map(function($question) use ($round) {
+                        return $question->round == $round->UUID ? $question : null;
+                    },$questions ));
 
 
 
-            foreach($roundQuestions as $q) {
-                echo '<li>' . $q->title . '</li>';
-            }
+                foreach($roundQuestions as $q) {
+                    echo '<li>' . $q->title . '</li>';
+                }
 
-            ?>
-        </ul>
+                ?>
+            </ul>
 
-        <form class="form-inline" action="manageQuiz.php<?echo '?quiz_id=' . $_GET['quiz_id'] ?>" method="post">
-            <div class="form-group mb-2">
-                <input class="<?echo $round->UUID ?>" name="question[]" type="text">
-                <button type="button" onclick="addQuestion('<?echo $round->UUID?>')">Add Question</button>
-                <input type="hidden" value="<?echo $round->UUID ?>" name="round">
-                <input type="hidden" value="<?echo $_GET['quiz_id'] ?>" name="quiz_id">
-                <button name="addQuestions" type="submit" class="btn btn-primary mb-2">Add Questions</button>
-            </div>
-        </form>
-    </div>
+            <form class="form-inline" action="manageQuiz.php<?echo '?quiz_id=' . $_GET['quiz_id'] ?>" method="post">
+                <div class="form-group mb-2">
+                    <input class="<?echo $round->UUID ?>" name="question[]" type="text">
+                    <button class="btn btn-sm btn-success" type="button" onclick="addQuestion('<?echo $round->UUID?>')">Add Question</button>
+                    <input type="hidden" value="<?echo $round->UUID ?>" name="round">
+                    <input type="hidden" value="<?echo $_GET['quiz_id'] ?>" name="quiz_id">
+                    </br>
+                    </br>
+                    <button name="addQuestions" type="submit" class="btn btn-primary mb-2">Save Questions</button>
+                </div>
+            </form>
+        </div>
     <?}?>
+    </div>
 </div>
 </body>
 
