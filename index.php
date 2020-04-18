@@ -34,7 +34,7 @@ if($tokenChecker->checkAuthToken()) {
 
         <? if(isset($_SESSION['error'])){?>
         <div class="container warning">
-            <p><?$_SESSION['error']?></p>
+            <p><?echo $_SESSION['error']?></p>
         </div>
         <?}?>
 

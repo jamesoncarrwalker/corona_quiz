@@ -60,11 +60,7 @@ $questions = $questionDao->getQuestionsForRound($quiz->UUID,$round->UUID);
 
 <body>
 <?php include_once("template/header.php")?>
-<? if(isset($_SESSION['error'])){?>
-    <div class="container warning">
-        <p><?$_SESSION['error']?></p>
-    </div>
-<?}?>
+
 
 <div class="container">
     <div class="row">

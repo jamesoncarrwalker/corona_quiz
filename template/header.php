@@ -26,5 +26,10 @@
         </div>
     </div>
 
-
 </div>
+
+<? if(isset($_SESSION['error'])){?>
+    <div class="container warning">
+        <p><?echo $_SESSION['error']?></p>
+    </div>
+<?}?>
