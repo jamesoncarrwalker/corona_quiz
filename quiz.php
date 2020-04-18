@@ -79,6 +79,7 @@ $questions = $questionDao->getQuestionsForRound($quiz->UUID,$round->UUID);
                             <?echo $r->title?>
                         </a> ( score: <?echo $pointsPerRound[$r->UUID]?? '/'?> ) </li>
                 <?}?>
+                <li>Total : <? echo abs($answerDao->getTeamScoreForQuiz($team->UUID,$quiz->UUID))?></li>
             </ul>
         </div>
         <div class="col-xs-12 col-sm-9 col-md-9 col-lg-9 edge left">
@@ -105,8 +106,8 @@ $questions = $questionDao->getQuestionsForRound($quiz->UUID,$round->UUID);
                     <?$i = 0;?>
                     <?foreach($answers as $answer){?>
                         <li><strong><?echo $questions[$i]->title ?> ?  </strong><?echo $answer->answer?>
-                            <span id="<?echo $answer->UUID?>_correct" class="glyphicon glyphicon-ok award_glyph <? echo ($answer->points > 0 ? 'active' : '')?> " ></span>
-                            <span id="<?echo $answer->UUID ?>_incorrect" class="glyphicon glyphicon-remove award_glyph <? echo ($answer->points < 1 ? 'active' : '') ?>" ></span>
+                            <span id="<?echo $answer->UUID?>_correct" class="glyphicon glyphicon-ok award_glyph <? echo ($answer->points > 0 ? 'correct' : '')?> " ></span>
+                            <span id="<?echo $answer->UUID ?>_incorrect" class="glyphicon glyphicon-remove award_glyph <? echo ($answer->points < 1 ? 'incorrect' : '') ?>" ></span>
 
                         </li>
                     <?$i++;}?>
