@@ -70,8 +70,6 @@ if($canMarkQuiz && !isset($_GET['quiz_id'])) {
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 ">
             <h2 class="text-center"><?echo $quizSelected ? $quiz->title : 'Welcome Quiz Master' ?></h2>
-<!--            <h3>--><?//echo  $canMarkQuiz ? ($quizSelected ? 'Get marking' : 'Choose a quiz') : 'Please log in'?><!--</h3>-->
-
         </div>
     </div>
     <?if($canMarkQuiz){?>
