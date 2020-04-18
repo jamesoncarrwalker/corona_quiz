@@ -74,14 +74,17 @@ class AnswerDataAccessService {
 
     public function markAnswerIncorrect(string $quiz, string $answer) {
         $q = $this->conn->prepare("UPDATE answer
-                                   SET answer.points = 0
+                                   SET answer.points = -1
                                    WHERE answer.UUID = :answer
                                    AND answer.quiz_UUID = :quiz");
         return $q->execute([':answer' => $answer,':quiz' => $quiz]);
     }
 
     public function getTeamScoreForQuiz(string $teamId, string $quizId) {
-        $q = $this->conn->prepare("SELECT SUM(points) AS total FROM answer WHERE quiz_UUID = :quiz AND team_UUID = :team");
+        $q = $this->conn->prepare(" SELECT SUM(IF(points > 0,points,0)) AS total
+                                    FROM answer
+                                    WHERE quiz_UUID = :quiz
+                                    AND team_UUID = :team");
         $q->execute([':quiz' => $quizId,':team' => $teamId]);
         return $q->fetchColumn();
 
