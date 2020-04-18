@@ -77,16 +77,20 @@ if(isset($_POST['joinQuiz'])) {
         </div>
     </div>
 
-    <div class="row">
+    <div class="row text-center">
+        </br>
         <form class="form-inline" action="join.php" method="post">
             <div class="form-group mb-2">
-                <label for="join" class="sr-only">Quiz Code</label>
+                <label for="join">Quiz Code</label>
                 <input name="quizCode" type="text" class="form-control-plaintext" id="join" placeholder="123ABC">
             </div>
+
             <div class="form-group mb-2">
-                <label for="join" class="sr-only">Team name</label>
+                <label for="join">Team name</label>
                 <input name="teamName" type="text" class="form-control-plaintext" id="join" placeholder="witty Team name">
             </div>
+            </br>
+            </br>
             <button name="joinQuiz" type="submit" class="btn btn-primary mb-2">Join Quiz</button>
         </form>
     </div>
