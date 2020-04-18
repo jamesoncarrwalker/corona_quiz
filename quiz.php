@@ -107,7 +107,7 @@ $questions = $questionDao->getQuestionsForRound($quiz->UUID,$round->UUID);
                     <?foreach($answers as $answer){?>
                         <li><strong><?echo $questions[$i]->title ?> ?  </strong><?echo $answer->answer?>
                             <span id="<?echo $answer->UUID?>_correct" class="glyphicon glyphicon-ok award_glyph <? echo ($answer->points > 0 ? 'correct' : '')?> " ></span>
-                            <span id="<?echo $answer->UUID ?>_incorrect" class="glyphicon glyphicon-remove award_glyph <? echo ($answer->points < 1 ? 'incorrect' : '') ?>" ></span>
+                            <span id="<?echo $answer->UUID ?>_incorrect" class="glyphicon glyphicon-remove award_glyph <? echo ($answer->points < 0 ? 'incorrect' : '') ?>" ></span>
 
                         </li>
                     <?$i++;}?>
