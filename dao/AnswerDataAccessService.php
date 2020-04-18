@@ -81,11 +81,28 @@ class AnswerDataAccessService {
     }
 
     public function getTeamScoreForQuiz(string $teamId, string $quizId) {
-        $q = $this->conn->prepare(" SELECT SUM(IF(points > 0,points,0)) AS total
+        $q = $this->conn->prepare(" SELECT SUM(IF(points > 0, points, 0)) AS total
                                     FROM answer
                                     WHERE quiz_UUID = :quiz
                                     AND team_UUID = :team");
         $q->execute([':quiz' => $quizId,':team' => $teamId]);
+        return $q->fetchColumn();
+
+    }
+
+    public function getTeamScoreForQuizRound(string $teamId, string $quizId,string $roundId) {
+        $q = $this->conn->prepare(" SELECT SUM(IF(answer.points > 0, answer.points, 0)) AS total
+                                    FROM answer
+                                    INNER JOIN question ON (
+                                      question.UUID = answer.question_UUID
+                                      AND question.quiz_UUID = answer.quiz_UUID
+
+                                    )
+                                    WHERE answer.quiz_UUID = :quiz
+                                    AND question.quiz_UUID = :quiz
+                                    AND question.round = :round
+                                    AND answer.team_UUID = :team");
+        $q->execute([':quiz' => $quizId,':team' => $teamId,':round' => $roundId]);
         return $q->fetchColumn();
 
     }

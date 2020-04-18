@@ -25,8 +25,8 @@ function ajaxRequest(method,call,response,data,file) {
 }
 
 
-function markAnswer(quizId, teamId, answerId, correct) {
-    var data = JSON.stringify({quizId:quizId,teamId:teamId,answerId:answerId,correct:correct});
+function markAnswer(quizId, teamId, answerId, round,correct) {
+    var data = JSON.stringify({quizId:quizId,teamId:teamId,answerId:answerId,correct:correct,round:round});
 
     ajaxRequest('GET','mark_answer','answerMarked',data);
 }
@@ -35,14 +35,15 @@ function answerMarked(json) {
     var response = JSON.parse(json);
 
 
+    $('#' + response.team + '_round_total_score').html(response.round_total);
     $('#' + response.team + '_total_score').html(response.total);
 
-    $('#' + response.answer + '_correct, #' + response.answer + '_incorrect').removeClass('active');
+    $('#' + response.answer + '_correct, #' + response.answer + '_incorrect').removeClass('correct incorrect');
 
     if(response.correct) {
-        $('#' + response.answer + '_correct').addClass('active');
+        $('#' + response.answer + '_correct').addClass('correct');
     } else {
-        $('#' + response.answer + '_incorrect').addClass('active');
+        $('#' + response.answer + '_incorrect').addClass('incorrect');
     }
 
 

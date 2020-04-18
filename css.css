@@ -55,14 +55,15 @@ body{
 .panel_list li, .panel {
 
     padding: 12px;
-    background-color: #EBDEF0 ;
+    background-color: #AED6F1   ;
     margin:8px;
     border-radius: 5px;
+
 }
 
-.panel {
+.panel,.panel_list li a {
     text-align: center;
-    color: #337ab7;
+    color:white;
 }
 
 .answer_list li {
@@ -75,11 +76,20 @@ body{
     padding: 5px;
 }
 
-.award_glyph:hover {
+.award_glyph.marksheet:hover {
     cursor: pointer;
     background-color: #EBDEF0 ;
 }
+.glyphicon.glyphicon-ok.marksheet:hover {
+    background-color:#82E0AA;
+}
 
-.award_glyph.active {
-    background-color: #D7BDE2;
+.award_glyph.correct {
+    background-color: #2ECC71;
+}
+.glyphicon.glyphicon-remove.marksheet:hover {
+    background-color:#F1948A;
+}
+.award_glyph.incorrect {
+    background-color: #EC7063;
 }

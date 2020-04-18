@@ -11,6 +11,7 @@ $canMarkQuiz = false;
 $quizSelected = false;
 $quizMasterId = null;
 $pdo = new PDOConn();
+$teamScores = [];
 
 if(isset($_POST['auth'])) {
     $authDao = new AuthTokenDataAccessService($pdo);
@@ -85,7 +86,11 @@ if($canMarkQuiz && !isset($_GET['quiz_id'])) {
             <h3>Totals</h3>
             <ul class="list-inline list-unstyled panel_list">
                 <?foreach($teams as $team){?>
-                    <li><?echo $team->team_name?> : <?echo abs($answerDao->getTeamScoreForQuiz($team->UUID,$quiz->UUID)) ?></li>
+                    <li class="panel"><?echo $team->team_name?> :  <span id="<?echo $team->UUID . '_total_score'?>"><?
+
+                       echo abs($answerDao->getTeamScoreForQuiz($team->UUID,$quiz->UUID)) ?>
+                            </span>
+                    </li>
                 <?}?>
             </ul>
 
@@ -109,15 +114,15 @@ if($canMarkQuiz && !isset($_GET['quiz_id'])) {
                                                     <ul class="list-unstyled">
                                                     <li class="section_heading">' . $answer->title . '?</li>
                                                         <li>' . $answer->answer . '
-                                                        <span id="' . $answer->UUID . '_correct" class="glyphicon glyphicon-ok award_glyph ' . ($answer->points > 0 ? 'active' : '') .' " onclick="markAnswer(\'' . $quiz->UUID . '\',\'' . $team->UUID . '\', \'' . $answer->UUID . '\', true)"></span>
-                                                        <span id="' . $answer->UUID . '_incorrect" class="glyphicon glyphicon-remove award_glyph ' . ($answer->points == 0 ? 'active' : '') .'" onclick="markAnswer(\'' . $quiz->UUID . '\',\'' . $team->UUID . '\', \'' . $answer->UUID . '\', false)"></span></li>
+                                                        <span id="' . $answer->UUID . '_correct" class="glyphicon glyphicon-ok marksheet award_glyph ' . ($answer->points > 0 ? 'correct' : '') .' " onclick="markAnswer(\'' . $quiz->UUID . '\',\'' . $team->UUID . '\', \'' . $answer->UUID . '\',\'' . $round->UUID . '\', true)"></span>
+                                                        <span id="' . $answer->UUID . '_incorrect" class="glyphicon glyphicon-remove marksheet award_glyph ' . ($answer->points == -1 ? 'incorrect' : '') .'" onclick="markAnswer(\'' . $quiz->UUID . '\',\'' . $team->UUID . '\', \'' . $answer->UUID . '\',\'' . $round->UUID . '\'  , false)"></span></li>
                                                     </ul>
                                                 </li>';
                                     }
 
                                     ?>
                                 </ol>
-                             <h5 class="panel">Score: <span id="<?echo $team->UUID . '_total_score'?>"><?echo array_sum(array_column($teamAnswers,'points'))?></span></h5>
+                             <h5 class="panel">Score: <span id="<?echo $team->UUID . '_round_total_score'?>"><?echo $answerDao->getTeamScoreForQuizRound($team->UUID,$quiz->UUID,$round->UUID)?></span></h5>
                             </li>
                         <?}?>
                     </ul>
