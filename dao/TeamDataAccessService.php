@@ -45,7 +45,7 @@ class TeamDataAccessService {
     }
 
     public function getTeamPointsForQuizByRound(string $quiz, string $team) {
-        $q = $this->conn->prepare(" SELECT round, sum(answer.points) AS points
+        $q = $this->conn->prepare(" SELECT round, SUM(IF(answer.points > 0,answer.points,0)) AS points
                                     FROM answer
                                     INNER JOIN question ON
                                       (question.quiz_UUID = answer.quiz_UUID AND question.UUID = answer.question_UUID)
