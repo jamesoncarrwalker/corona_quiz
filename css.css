@@ -1,0 +1,85 @@
+.sign {
+    background-size: contain;
+    background-image: url("sign.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    height: 250px;
+}
+
+.dicks_header .sign.icon {
+    height: 50px!important;
+    background-position: right;
+}
+
+body{
+    /*background-color: #D6EAF8;*/
+}
+
+.dicks_header {
+    background-color: #AED6F1;
+    padding: 12px;
+    min-height: 50px;
+    margin-bottom: 12px;
+}
+
+.edge.bottom {
+    border-bottom: 1px solid #3498DB;
+}
+
+.edge.left {
+    border-left: 1px solid #3498DB;
+}
+.edge.right {
+    border-right: 1px solid #3498DB;
+}
+
+.edge.top {
+    border-top: 1px solid #3498DB;
+}
+
+.section_heading {
+    text-decoration: underline;
+    font-weight: 800;
+    text-align: left;
+}
+
+.submit_button {
+    margin-top: 8px;
+}
+
+.dicks_nav li {
+    margin: 5px;
+    padding: 5px;
+}
+
+.panel_list li, .panel {
+
+    padding: 12px;
+    background-color: #EBDEF0 ;
+    margin:8px;
+    border-radius: 5px;
+}
+
+.panel {
+    text-align: center;
+    color: #337ab7;
+}
+
+.answer_list li {
+    padding: 5px;
+}
+
+.award_glyph {
+    background-color: #D5DBDB ;
+    border-radius: 15px;
+    padding: 5px;
+}
+
+.award_glyph:hover {
+    cursor: pointer;
+    background-color: #EBDEF0 ;
+}
+
+.award_glyph.active {
+    background-color: #D7BDE2;
+}

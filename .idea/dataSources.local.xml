@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="dataSourceStorageLocal">
+    <data-source name="MySQL - quizAtTheDicks@localhost" uuid="52385b38-bf10-4bea-8690-811dc832c99b">
+      <secret-storage>master_key</secret-storage>
+      <user-name>root</user-name>
+      <schema-pattern>quizAtTheDicks.*</schema-pattern>
+      <default-schemas>quizAtTheDicks.*</default-schemas>
+    </data-source>
+  </component>
+</project>
