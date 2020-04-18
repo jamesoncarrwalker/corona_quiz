@@ -29,7 +29,7 @@
 </div>
 
 <? if(isset($_SESSION['error'])){?>
-    <div class="container warning">
+    <div class="container alert alert-danger text-center">
         <p><?echo $_SESSION['error']?></p>
     </div>
 <?}?>
