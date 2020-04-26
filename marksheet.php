@@ -120,7 +120,7 @@ if($canMarkQuiz && !isset($_GET['quiz_id'])) {
                         <?
                         }
                     } else {?>
-                        <li class="panel"><span class="section_heading">No team have joined yet</span></li>
+                        <li class="panel"><span class="section_heading">No teams have joined yet</span></li>
                     <?}?>
                 </ul>
 
@@ -131,8 +131,10 @@ if($canMarkQuiz && !isset($_GET['quiz_id'])) {
 
                         $teamAnswers = $answerDao->getQuestionsWithAnswersForRound($quiz->UUID,$round->UUID);
 
-                        foreach($teamAnswers as $questionId => $answers) {?>
-                            <li class="col-xs-12 col-sm-12 col-md-12 panel"><?  echo ($answers[0]->question ?? '....')?>?</li>
+                        foreach($teamAnswers as $questionId => $answers) {
+                            $points = $answers[0]->points_available ?? 1;
+                            ?>
+                            <li class="col-xs-12 col-sm-12 col-md-12 panel"><?  echo ($answers[0]->question ?? '....')?>? (<?echo $points?> points)</li>
                             <li class="col-xs-12 col-sm-12 col-md-12">
                                 <ul class="list-unstyled list-inline  ">
                                     <?foreach($answers as $teamAnswer) {
@@ -141,9 +143,15 @@ if($canMarkQuiz && !isset($_GET['quiz_id'])) {
                                         <li class="col-xs-6 col-sm-4 col-md-3 col-lg-3 ">
                                             <p class="section_heading"><?echo $teams[$teamAnswer->team_UUID]->team_name ?? 'Someone'?></p>
                                             <p><?echo $teamAnswer->answer ?? ''?></p>
-
+                                        <?if($points == 1) {?>
                                             <span id="<?echo $teamAnswer->UUID?>_correct" class="glyphicon glyphicon-ok marksheet award_glyph <?echo ($teamAnswer->points > 0 ? 'correct' : '')?> " onclick="markAnswer('<?echo $quiz->UUID ?>','<?echo $teamAnswer->team_UUID?>', '<?echo $teamAnswer->UUID ?>','<?echo $round->UUID?>', true)"></span>
-
+                                        <?} else {?>
+                                            <select id="<?echo $teamAnswer->UUID?>" data-quiz="<?echo $quiz->UUID ?>"  data-team="<?echo $teamAnswer->team_UUID?>" data-round="<?echo $round->UUID?>" onchange="markAnswerWithPoints(this)">
+                                                <?for($i = 0; $i <= $points; $i += 0.5) {?>
+                                                    <option value="<?echo $i?>"><?echo $i?></option>
+                                                <?}?>
+                                            </select>
+                                            <?}?>
                                             <span id="<?echo $teamAnswer->UUID?>_incorrect" class="glyphicon glyphicon-remove marksheet award_glyph <? echo ($teamAnswer->points == -1 ? 'incorrect' : '')?>" onclick="markAnswer('<?echo $quiz->UUID?>','<?echo $teamAnswer->team_UUID?>', '<?echo $teamAnswer->UUID?>','<?echo $round->UUID?>', false)"></span>
                                         </li>
                                     <?}?>

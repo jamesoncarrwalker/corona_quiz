@@ -33,7 +33,7 @@ class AnswerDataAccessService {
     }
 
     public function getQuestionsWithAnswersForRound(string $quiz,string $round) {
-        $q = $this->conn->prepare(" SELECT question.UUID,question.title AS question, answer.*
+        $q = $this->conn->prepare(" SELECT question.UUID,question.title AS question,question.points AS points_available, answer.*
                                     FROM question
                                     LEFT JOIN answer ON (
                                         answer.quiz_UUID = question.quiz_UUID
@@ -78,13 +78,13 @@ class AnswerDataAccessService {
         return $q->execute([':quiz' => $quiz,':team' => $team, ':question' => $question, ':answer' => $answer]);
     }
 
-    public function markAnswerCorrect(string $quiz, string $answer) {
+    public function markAnswerCorrect(string $quiz, string $answer,float $points = 1) {
         $q = $this->conn->prepare("UPDATE answer
                                    INNER JOIN question ON (question.quiz_UUID = answer.quiz_UUID)
-                                   SET answer.points = question.points
+                                   SET answer.points = :points
                                    WHERE answer.UUID = :answer
                                    AND answer.quiz_UUID = :quiz");
-        return $q->execute([':answer' => $answer,':quiz' => $quiz]);
+        return $q->execute([':answer' => $answer,':quiz' => $quiz,':points' => $points]);
     }
 
     public function markAnswerIncorrect(string $quiz, string $answer) {

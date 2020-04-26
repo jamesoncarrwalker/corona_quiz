@@ -31,6 +31,19 @@ function markAnswer(quizId, teamId, answerId, round,correct) {
     ajaxRequest('GET','markAnswer','answerMarked',data);
 }
 
+function markAnswerWithPoints(input) {
+    console.log(input);
+    var answerId = $(input).attr('id');
+    var points = $(input).val();
+    var quiz = $(input).data('quiz');
+    var team = $(input).data('team');
+    var round = $(input).data('round');
+    console.log(answerId,points);
+    var data = JSON.stringify({quizId:quiz,teamId:team,answerId:answerId,points:points,round:round});
+
+    ajaxRequest('GET','markAnswer','answerMarked',data);
+}
+
 function answerMarked(json) {
     var response = JSON.parse(json);
 
@@ -38,12 +51,14 @@ function answerMarked(json) {
     $('#' + response.team + '_round_total_score').html(response.round_total);
     $('#' + response.team + '_total_score').html(response.total);
 
-    $('#' + response.answer + '_correct, #' + response.answer + '_incorrect').removeClass('correct incorrect');
+    $('#' + response.answer + '_correct, #' + response.answer + '_incorrect, #' + response.answer).removeClass('correct incorrect');
 
     if(response.correct) {
         $('#' + response.answer + '_correct').addClass('correct');
+        $('#' + response.answer ).addClass('correct')
     } else {
         $('#' + response.answer + '_incorrect').addClass('incorrect');
+        $('#' + response.answer ).val(0);
     }
 
 
@@ -107,3 +122,4 @@ function updatedRoundQuestionVisibility(json) {
         hide.addClass('incorrect');
     }
 }
+
