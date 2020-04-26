@@ -116,7 +116,7 @@ if (isset($_POST['createQuiz']) && $canCreateQuiz) {
             </div>
             <div class="form-group mb-2">
                 <label for="password" >Password</label>
-                <input name="password" type="text" class="form-control-plaintext" id="password" placeholder="password">
+                <input name="password" type="password" class="form-control-plaintext" id="password" placeholder="password">
             </div>
             <button name="auth" type="submit" class="btn btn-primary mb-2">Make a Quiz</button>
         </form>

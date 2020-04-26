@@ -153,12 +153,12 @@ if($canMarkQuiz && !isset($_GET['quiz_id'])) {
         <div class="row">
             <form class="form-inline" action="marksheet.php" method="post">
                 <div class="form-group mb-2">
-                    <label for="username" class="sr-only">Username</label>
+                    <label for="username" >Username</label>
                     <input name="username" type="text" class="form-control-plaintext" id="username" placeholder="username">
                 </div>
                 <div class="form-group mb-2">
-                    <label for="password" class="sr-only">password</label>
-                    <input name="password" type="text" class="form-control-plaintext" id="password" placeholder="password">
+                    <label for="password" >Password</label>
+                    <input name="password" type="password" class="form-control-plaintext" id="password" placeholder="password">
                 </div>
                 <button name="auth" type="submit" class="btn btn-primary mb-2">Mark Quiz</button>
             </form>
