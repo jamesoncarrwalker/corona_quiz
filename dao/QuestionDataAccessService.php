@@ -50,7 +50,7 @@ ORDER BY sort_order ASC
             $values[] = '((SELECT uuid()), :quiz, :round, :title_' . $key . ', :points_' . $key . ', :sort_order_' . $key . ')';
             $bindArray[':title_' . $key] = $question;
             $bindArray[':sort_order_' . $key] = $i;
-            $bindArray[':points_' . $key] = $points[$key]??1;
+            $bindArray[':points_' . $key] = (isset($points[$key]) && $points[$key] > 1) ? $points[$key] : 1;
             $i++;
         }
         $sql = $sql . implode(',',$values);

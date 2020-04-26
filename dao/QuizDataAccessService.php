@@ -43,7 +43,7 @@ class QuizDataAccessService {
     }
 
     public function getUserCreatedQuizzes(string $user) {
-        $q = $this->conn->prepare("SELECT * FROM quiz WHERE host = :host");
+        $q = $this->conn->prepare("SELECT * FROM quiz WHERE host = :host ORDER BY quiz.updated DESC");
         $q->execute([':host' => $user]);
         return $q->fetchAll();
     }
