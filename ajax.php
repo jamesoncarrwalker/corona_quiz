@@ -47,9 +47,6 @@ if(isset($endpoint)) {
                     echo 'no questions';
                 }
 
-
-
-
             } else {
                 echo 'not your quiz';
             }
@@ -58,6 +55,12 @@ if(isset($endpoint)) {
         }
 
 
+    } else if ($endpoint == 'setRoundQuestionVisibility') {
+        $roundDao = new RoundDataAccessService($pdo);
+
+        $response = ['updated' => $roundDao->setRoundQuestionVisibility($data->quiz,$data->round,$data->show),'round' => $data->round,'show' => $data->show];
+        $return = addslashes(json_encode($response));
+        echo $return;
     } else {
         echo 'invalid endpoint';
     }

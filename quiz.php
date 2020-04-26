@@ -88,7 +88,7 @@ $questions = $questionDao->getQuestionsForRound($quiz->UUID,$round->UUID);
                 <?$i = 1;?>
                 <?foreach($questions as $question){?>
                     <div class="form-group mb-2 ">
-                        <label for="<?echo $question->UUID?>" class="">Question <?echo $i . ""?></label>
+                        <label for="<?echo $question->UUID?>" class="">Question <?echo $i . ($round->show_answers ? ' - ' . $question->title : "" )?></label>
                         <?$i++;?>
                         </br>
                         <input type="hidden" name="question[]" value="<?echo $question->UUID?>">

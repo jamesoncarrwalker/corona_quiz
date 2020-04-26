@@ -1,0 +1,1 @@
+ALTER TABLE `round` ADD `show_answers` BOOLEAN NOT NULL DEFAULT FALSE AFTER `sort_order`;

@@ -53,7 +53,7 @@ if($tokenChecker->checkAuthToken()) {
             <div class="row">
                 <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center"><a href="join.php" class="btn btn-info text-center ">Join a quiz</a></div>
                 <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center"><a href="create.php" class="btn btn-info text-center ">Create a quiz</a></div>
-                <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center"><a href="marksheet.php" class="btn btn-info ">Mark a quiz</a></div>
+                <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center"><a href="marksheet.php" class="btn btn-info ">Host a quiz</a></div>
             </div>
         </div>
     </body>

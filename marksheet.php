@@ -84,27 +84,43 @@ if($canMarkQuiz && !isset($_GET['quiz_id'])) {
         <?} else {?>
             <div class="col-xs-12 col-sm-3 col-md-2 col-lg-2 ">
                 <ul class="list-unstyled">
+                    <li class="section_heading">Invitation code</li>
+                    <li class="panel"><?echo $quiz->invitation_code?></li>
                     <li class="section_heading">Rounds: </li>
                     <?foreach($rounds as $r){?>
-                        <li class=" panel <? if(isset($round) && $round->UUID == $r->UUID) echo 'active' ?>"><a href="marksheet.php?quiz_id=<?echo $quiz->UUID?>&round=<?echo $r->UUID?>"><?echo $r->title?></a></li>
+                        <li class=" panel <? if(isset($round) && $round->UUID == $r->UUID) echo 'active' ?>"><a href="marksheet.php?quiz_id=<?echo $quiz->UUID?>&round=<?echo $r->UUID?>"><?echo $r->title?></a>
+                        </li>
+                        <li> Show questions to teams?
+                            <span id="<?echo $r->UUID?>_questions_visible" class="glyphicon glyphicon-ok marksheet award_glyph <?echo ($r->show_answers > 0 ? 'correct' : '')?> " onclick="updateShowRoundQuestions('<?echo $quiz->UUID ?>','<?echo $r->UUID?>', true)"></span>
+
+                            <span id="<?echo $r->UUID?>_questions_hidden" class="glyphicon glyphicon-remove marksheet award_glyph <? echo ($r->show_answers < 1 ? 'incorrect' : '')?>" onclick="updateShowRoundQuestions('<?echo $quiz->UUID?>','<?echo $r->UUID?>', false)"></span>
+                        </li>
                     <?}?>
                 </ul>
             </div>
             <div class="col-xs-12 col-sm-9 col-md-10 col-lg-10 edge left">
                 <h4 class="section_heading">Scores</h4>
                 <ul class="list-inline list-unstyled panel_list">
-                    <?foreach($teams as $team){?>
-                        <li class="panel">
-                            <span class="section_heading"><?echo $team->team_name?></span></br>
-                            Total: <span id="<?echo $team->UUID . '_total_score'?>">
-                                <? echo abs($answerDao->getTeamScoreForQuiz($team->UUID,$quiz->UUID)) ?>
-                            </span>
+                    <?if(count($teams) > 0) {
+                        foreach ($teams as $team) {
+                            ?>
+                            <li class="panel">
+                                <span class="section_heading"><? echo $team->team_name ?></span></br>
+                                Quiz Total: <span id="<? echo $team->UUID . '_total_score' ?>">
+                                    <? echo abs($answerDao->getTeamScoreForQuiz($team->UUID, $quiz->UUID)) ?>
+                                </span>
 
-                            <?if($roundSelected) {?>
-                                </br>
-                                <?echo $round->title?> round: <span id="<?echo $team->UUID . '_round_total_score'?>"><?echo $answerDao->getTeamScoreForQuizRound($team->UUID,$quiz->UUID,$round->UUID)?></span>
-                            <?}?>
-                        </li>
+                                <? if ($roundSelected) { ?>
+                                    </br>
+                                    This round: <span
+                                        id="<? echo $team->UUID . '_round_total_score' ?>"><? echo $answerDao->getTeamScoreForQuizRound($team->UUID, $quiz->UUID, $round->UUID) ?? '-' ?></span>
+                                <?
+                                } ?>
+                            </li>
+                        <?
+                        }
+                    } else {?>
+                        <li class="panel"><span class="section_heading">No team have joined yet</span></li>
                     <?}?>
                 </ul>
 
@@ -112,14 +128,16 @@ if($canMarkQuiz && !isset($_GET['quiz_id'])) {
                     <ol class="list-unstyled">
 
                         <?
+
                         $teamAnswers = $answerDao->getQuestionsWithAnswersForRound($quiz->UUID,$round->UUID);
 
                         foreach($teamAnswers as $questionId => $answers) {?>
                             <li class="col-xs-12 col-sm-12 col-md-12 panel"><?  echo ($answers[0]->question ?? '....')?>?</li>
-
                             <li class="col-xs-12 col-sm-12 col-md-12">
                                 <ul class="list-unstyled list-inline  ">
-                                    <?foreach($answers as $teamAnswer) {?>
+                                    <?foreach($answers as $teamAnswer) {
+                                        if(!isset($teamAnswer->team_UUID))continue;
+                                        ?>
                                         <li class="col-xs-6 col-sm-4 col-md-3 col-lg-3 ">
                                             <p class="section_heading"><?echo $teams[$teamAnswer->team_UUID]->team_name ?? 'Someone'?></p>
                                             <p><?echo $teamAnswer->answer ?? ''?></p>

@@ -44,8 +44,17 @@ class RoundDataAccessService {
         $sql = $sql . implode(',',$values);
         $q = $this->conn->prepare($sql);
         return $q->execute($bindArray);
+    }
 
-
+    public function setRoundQuestionVisibility(string $quiz,string $round, bool $show) {
+        $q = $this->conn->prepare(" UPDATE round
+                                    SET show_answers = :show
+                                    WHERE round.UUID = :round
+                                    AND round.quiz_UUID = :quiz");
+        $q->bindParam(':quiz',$quiz,PDO::PARAM_STR);
+        $q->bindParam(':round',$round,PDO::PARAM_STR);
+        $q->bindParam(':show',$show,PDO::PARAM_BOOL);
+        return $q->execute();
     }
 
 }

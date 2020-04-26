@@ -65,7 +65,6 @@ function questionsAddedForRound(json) {
     var response = JSON.parse(json);
     var questions = response.questions;
     var html = '';
-    console.log(questions);
     $(questions).each(function() {
         html += '<li>' + this.title + '</li>';
     });
@@ -81,4 +80,25 @@ function questionsAddedForRound(json) {
     }
 
     $('#round_' + response.round + '_questions_list').html(html);
+}
+
+function updateShowRoundQuestions(quiz,round,show) {
+    var json = JSON.stringify({quiz:quiz,round:round, show:show});
+
+    ajaxRequest('GET','setRoundQuestionVisibility','updatedRoundQuestionVisibility',json);
+}
+
+function updatedRoundQuestionVisibility(json) {
+    var response = JSON.parse(json);
+    if (response.updated === false) return;
+
+    var show = $('#' + response.round + '_questions_visible').removeClass('correct');
+    var hide = $('#' + response.round + '_questions_hidden').removeClass('incorrect');
+
+
+    if (response.show) {
+        show.addClass('correct');
+    } else {
+        hide.addClass('incorrect');
+    }
 }

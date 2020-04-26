@@ -33,13 +33,14 @@ class AnswerDataAccessService {
     }
 
     public function getQuestionsWithAnswersForRound(string $quiz,string $round) {
-        $q = $this->conn->prepare("SELECT question.UUID,question.title AS question, answer.*
-                                    FROM answer
-                                    INNER JOIN question
-                                    ON (question.quiz_UUID = answer.quiz_UUID
+        $q = $this->conn->prepare(" SELECT question.UUID,question.title AS question, answer.*
+                                    FROM question
+                                    LEFT JOIN answer ON (
+                                        answer.quiz_UUID = question.quiz_UUID
                                         AND answer.question_UUID = question.UUID
                                         )
-                                    WHERE answer.quiz_UUID = :quiz
+
+                                    WHERE question.quiz_UUID = :quiz
                                     AND question.round = :round");
         $q->bindParam(':quiz',$quiz,PDO::PARAM_STR);
         $q->bindParam(':round',$round,PDO::PARAM_STR);
