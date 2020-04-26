@@ -41,15 +41,16 @@ ORDER BY sort_order ASC
         return $q->fetchColumn();
     }
 
-    public function addQuestions(string $quizId, string $round, array $questions) {
+    public function addQuestions(string $quizId, string $round, array $questions,array $points) {
         $sql = "INSERT INTO question (UUID,quiz_UUID, round, title, points, sort_order) VALUES ";
         $bindArray = [':quiz' => $quizId,':round'=> $round];
         $values = [];
         $i = $this->getTotalQuestionsForRound($quizId,$round);
         foreach($questions as $key => $question) {
-            $values[] = '((SELECT uuid()), :quiz, :round, :title_' . $key . ', 1,:sort_order_' . $key . ')';
+            $values[] = '((SELECT uuid()), :quiz, :round, :title_' . $key . ', :points_' . $key . ', :sort_order_' . $key . ')';
             $bindArray[':title_' . $key] = $question;
             $bindArray[':sort_order_' . $key] = $i;
+            $bindArray[':points_' . $key] = $points[$key]??1;
             $i++;
         }
         $sql = $sql . implode(',',$values);

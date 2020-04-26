@@ -36,7 +36,7 @@ if(isset($endpoint)) {
                     $questionDao = new QuestionDataAccessService($pdo);
 
 
-                    if($questionDao->addQuestions($data->quiz,$data->round,$questions)) {
+                    if($questionDao->addQuestions($data->quiz,$data->round,$questions,$data->points)) {
                         $response = ['round' => $data->round,'questions' => $questionDao->getQuestionsForRound($quiz->UUID,$data->round)];
                         $return = addslashes(json_encode($response));
                         echo $return;

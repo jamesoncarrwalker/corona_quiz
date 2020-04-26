@@ -26,9 +26,7 @@ if(!isset($_GET['quiz_id'])) {
 
 if(isset($_POST['addQuestions'])) {
     $questionDao = new QuestionDataAccessService(new PDOConn());
-    $questionDao->addQuestions($_GET['quiz_id'],$_POST['round'],$_POST['question']);
-    $i = 0;
-
+    $questionDao->addQuestions($_GET['quiz_id'],$_POST['round'],$_POST['question'],$_POST['points']);
     header('location: manageQuiz.php?quiz_id=' . $_GET['quiz_id'] );
     die();
 }
@@ -63,7 +61,11 @@ if($canCreateQuiz) {
     <script type="text/javascript">
         function addQuestion(round) {
 
-            $('.' + round).last().after('<input class="' + round + ' round_question" name="question[]" type="text">');
+            $('.' + round).last().after('' +
+                '</br><label>Question</label></br><input class="' + round + ' round_question" name="question[]" type="text">' +
+                '</br><label>Points</label></br><input class="' + round + ' round_question_points" name="points[]" type="number" step="1" >' +
+                '' +
+                '');
 
         }
     </script>
@@ -79,7 +81,7 @@ if($canCreateQuiz) {
                     },$questions ));
 
                 foreach($roundQuestions as $q) {
-                    echo '<li>' . $q->title . '</li>';
+                    echo '<li>' . $q->title . ' <span class="available_points_for_question">' . $q->points . '</span></li>';
                 }
 
                 ?>
@@ -87,7 +89,9 @@ if($canCreateQuiz) {
 
             <form class="form-inline" id="round_<?echo $round->UUID ?>_form">
                 <div class="form-group mb-2">
-                    <input class="<?echo $round->UUID ?> round_question" name="question[]" type="text">
+                    <label>Question</label></br><input class="<?echo $round->UUID ?> round_question" name="question[]" type="text"></br>
+                    <label>Points</label></br>
+                    <input class="<?echo $round->UUID ?> round_question_points" name="points[]" type="number" step="1" >
                     <button class="btn btn-sm btn-success" type="button" onclick="addQuestion('<?echo $round->UUID?>')">Add Question</button>
                     </br>
                     </br>

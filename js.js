@@ -51,11 +51,14 @@ function answerMarked(json) {
 
 function saveQuestions(quizMasterId, quizId,roundId) {
     var questions = [];
-
+    var points = [];
     $('form#round_' + roundId + '_form :input[type=text]').each(function(){
        questions.push(this.value);
     });
-    var json = JSON.stringify({host:quizMasterId,quiz:quizId,round:roundId, question:questions});
+    $('form#round_' + roundId + '_form :input[type=number]').each(function(){
+       points.push(this.value);
+    });
+    var json = JSON.stringify({host:quizMasterId,quiz:quizId,round:roundId, question:questions,points:points});
 
     ajaxRequest('GET','addRoundQuestions','questionsAddedForRound',json);
 
@@ -66,16 +69,18 @@ function questionsAddedForRound(json) {
     var questions = response.questions;
     var html = '';
     $(questions).each(function() {
-        html += '<li>' + this.title + '</li>';
+        html += '<li>' + this.title + ' <span class="available_points_for_question">' + this.points + '</span></li>';
     });
     html += '';
 
     $('#round_' + response.round + '_form').trigger('reset');
     var inputs = $('#round_' + response.round + '_form :input[type=text]');
+    var points = $('#round_' + response.round + '_form :input[type=number]');
     var i = 1;
 
     while(i < inputs.length) {
         $(inputs[i]).remove();
+        $(points[i]).remove();
         i++;
     }
 

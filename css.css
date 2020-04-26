@@ -100,3 +100,11 @@ body{
 .award_glyph.incorrect {
     background-color: #EC7063;
 }
+.available_points_for_question {
+    font-size: x-small;
+    font-weight: 800;
+    color: #5DADE2;
+}
+.available_points_for_question::after {
+    content: ' pts';
+}
