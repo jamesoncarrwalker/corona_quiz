@@ -22,6 +22,16 @@ class RoundDataAccessService {
         return $q->fetch();
     }
 
+    public function getFirstRoundForQuiz(string $quiz) {
+        $q = $this->conn->prepare('SELECT * FROM round
+                                   WHERE quiz_UUID = :quiz
+                                   ORDER BY sort_order ASC
+                                   LIMIT 1');
+        $q->bindParam(':quiz',$quiz, PDO::PARAM_STR);
+        $q->execute();
+        return $q->fetch();
+    }
+
     public function getAllRoundForQuiz(string $quizId) {
         $q = $this->conn->prepare('SELECT * FROM round WHERE quiz_UUID = :id');
         $q->bindParam(':id',$quizId, PDO::PARAM_STR);

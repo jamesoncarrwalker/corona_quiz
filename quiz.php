@@ -73,11 +73,11 @@ $questions = $questionDao->getQuestionsForRound($quiz->UUID,$round->UUID);
     <div class="row">
         <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3" style="min-height: 250px;">
             <h4 class="section_heading">Rounds</h4>
-            <ul class="list-unstyled">
+            <ul class="list-unstyled panel_list">
                <?foreach($rounds as $r){?>
-                    <li><a href="quiz.php?quiz_id=<?echo $quiz->UUID?>&round=<?echo $r->UUID?>">
+                   <a href="quiz.php?quiz_id=<?echo $quiz->UUID?>&round=<?echo $r->UUID?>"><li class="panel <?if($r->UUID == $round->UUID) echo "active";?>">
                             <?echo $r->title?>
-                        </a> ( score: <?echo $pointsPerRound[$r->UUID]?? '/'?> ) </li>
+                         ( score: <?echo $pointsPerRound[$r->UUID]?? '/'?> ) </li></a>
                 <?}?>
                 <li>Total : <? echo abs($answerDao->getTeamScoreForQuiz($team->UUID,$quiz->UUID))?></li>
             </ul>

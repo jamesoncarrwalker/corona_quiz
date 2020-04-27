@@ -50,6 +50,9 @@ if($canMarkQuiz && !isset($_GET['quiz_id'])) {
     if(isset($_GET['round'])) {
         $round = $roundsDao->getRoundById($_GET['round'], $quiz->UUID);
         $roundSelected = true;
+    } else {
+        $round = $roundsDao->getFirstRoundForQuiz($quiz->UUID);
+        $roundSelected = true;
     }
 
 
@@ -90,7 +93,7 @@ if($canMarkQuiz && !isset($_GET['quiz_id'])) {
                     <?foreach($rounds as $r){?>
                         <li class=" panel <? if(isset($round) && $round->UUID == $r->UUID) echo 'active' ?>"><a href="marksheet.php?quiz_id=<?echo $quiz->UUID?>&round=<?echo $r->UUID?>"><?echo $r->title?></a>
                         </li>
-                        <li> Show questions to teams?
+                        <li class="panel_description"> Show questions to teams?
                             <span id="<?echo $r->UUID?>_questions_visible" class="glyphicon glyphicon-ok marksheet award_glyph <?echo ($r->show_answers > 0 ? 'correct' : '')?> " onclick="updateShowRoundQuestions('<?echo $quiz->UUID ?>','<?echo $r->UUID?>', true)"></span>
 
                             <span id="<?echo $r->UUID?>_questions_hidden" class="glyphicon glyphicon-remove marksheet award_glyph <? echo ($r->show_answers < 1 ? 'incorrect' : '')?>" onclick="updateShowRoundQuestions('<?echo $quiz->UUID?>','<?echo $r->UUID?>', false)"></span>

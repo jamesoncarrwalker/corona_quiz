@@ -110,3 +110,7 @@ body{
 .available_points_for_question::after {
     content: ' pts';
 }
+.panel_description {
+    padding-left: 12px;
+    font-size: xx-small;
+}
