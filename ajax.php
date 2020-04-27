@@ -14,14 +14,19 @@ if(isset($endpoint)) {
 
     if($endpoint == 'markAnswer') {
         $answerDao = new AnswerDataAccessService($pdo);
-        $correct = isset($data->correct) ? $data->correct : isset($data->points);
+        if(isset($data->points) && $data->points == 0) {
+            $correct = false;
+        } else {
+            $correct =  isset($data->correct) ? $data->correct : isset($data->points);
+        }
 
+        $half = isset($data->half) ? true : (isset($data->points) && $data->points == 0.5);
         if($correct) {
             $answerDao->markAnswerCorrect($data->quizId,$data->answerId,$data->points??1);
-            $response = (object) ['total' => $answerDao->getTeamScoreForQuiz($data->teamId,$data->quizId),'correct' => true,'team' => $data->teamId,'answer' => $data->answerId,'round_total' => $answerDao->getTeamScoreForQuizRound($data->teamId,$data->quizId,$data->round)];
+            $response = (object) ['total' => $answerDao->getTeamScoreForQuiz($data->teamId,$data->quizId),'correct' => true,'team' => $data->teamId,'answer' => $data->answerId,'round_total' => $answerDao->getTeamScoreForQuizRound($data->teamId,$data->quizId,$data->round),'half' => $half];
         } else {
             $answerDao->markAnswerIncorrect($data->quizId,$data->answerId);
-            $response = (object) ['total' => $answerDao->getTeamScoreForQuiz($data->teamId,$data->quizId),'correct' => $data->correct,'team' => $data->teamId,'answer' => $data->answerId,'round_total' => $answerDao->getTeamScoreForQuizRound($data->teamId,$data->quizId,$data->round)];
+            $response = (object) ['total' => $answerDao->getTeamScoreForQuiz($data->teamId,$data->quizId),'correct' => false,'team' => $data->teamId,'answer' => $data->answerId,'round_total' => $answerDao->getTeamScoreForQuizRound($data->teamId,$data->quizId,$data->round)];
         }
 
         $return = addslashes(json_encode($response));

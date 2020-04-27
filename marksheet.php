@@ -144,11 +144,12 @@ if($canMarkQuiz && !isset($_GET['quiz_id'])) {
                                             <p class="section_heading"><?echo $teams[$teamAnswer->team_UUID]->team_name ?? 'Someone'?></p>
                                             <p><?echo $teamAnswer->answer ?? ''?></p>
                                         <?if($points == 1) {?>
-                                            <span id="<?echo $teamAnswer->UUID?>_correct" class="glyphicon glyphicon-ok marksheet award_glyph <?echo ($teamAnswer->points > 0 ? 'correct' : '')?> " onclick="markAnswer('<?echo $quiz->UUID ?>','<?echo $teamAnswer->team_UUID?>', '<?echo $teamAnswer->UUID ?>','<?echo $round->UUID?>', true)"></span>
+                                            <span id="<?echo $teamAnswer->UUID?>_correct" class="glyphicon glyphicon-ok marksheet award_glyph <?echo ($teamAnswer->points > 0.5 ? 'correct' : '')?> " onclick="markAnswer('<?echo $quiz->UUID ?>','<?echo $teamAnswer->team_UUID?>', '<?echo $teamAnswer->UUID ?>','<?echo $round->UUID?>', true)"></span>
+                                            <span id="<?echo $teamAnswer->UUID?>_half" data-id="<?echo $teamAnswer->UUID?>" data-quiz="<?echo $quiz->UUID ?>"  data-team="<?echo $teamAnswer->team_UUID?>" data-round="<?echo $round->UUID?>" onclick="markAnswerWithHalf(this)" class=" marksheet award_glyph <?echo ($teamAnswer->points == 0.5 ? 'half-point' : '')?> ">1/2</span>
                                         <?} else {?>
-                                            <select id="<?echo $teamAnswer->UUID?>" data-quiz="<?echo $quiz->UUID ?>"  data-team="<?echo $teamAnswer->team_UUID?>" data-round="<?echo $round->UUID?>" onchange="markAnswerWithPoints(this)">
+                                            <select id="<?echo $teamAnswer->UUID?>_select" data-id="<?echo $teamAnswer->UUID?>" data-quiz="<?echo $quiz->UUID ?>"  data-team="<?echo $teamAnswer->team_UUID?>" data-round="<?echo $round->UUID?>" class="<?echo ($teamAnswer->points == 0.5 ? 'half-point' : ($teamAnswer->points > 0.5 ? 'correct' : ''))?>" onchange="markAnswerWithPoints(this)">
                                                 <?for($i = 0; $i <= $points; $i += 0.5) {?>
-                                                    <option value="<?echo $i?>"><?echo $i?></option>
+                                                    <option <?if($i == $teamAnswer->points) {echo "selected=\"true\"";} ?> value="<?echo $i?>"><?echo $i?></option>
                                                 <?}?>
                                             </select>
                                             <?}?>

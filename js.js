@@ -32,14 +32,25 @@ function markAnswer(quizId, teamId, answerId, round,correct) {
 }
 
 function markAnswerWithPoints(input) {
-    console.log(input);
-    var answerId = $(input).attr('id');
+    var answerId = $(input).data('id');
     var points = $(input).val();
     var quiz = $(input).data('quiz');
     var team = $(input).data('team');
     var round = $(input).data('round');
-    console.log(answerId,points);
+
+    console.log('points submitted: ',points);
     var data = JSON.stringify({quizId:quiz,teamId:team,answerId:answerId,points:points,round:round});
+
+    ajaxRequest('GET','markAnswer','answerMarked',data);
+}
+
+function markAnswerWithHalf(input) {
+    var answerId = $(input).data('id');
+    var points = 0.5;
+    var quiz = $(input).data('quiz');
+    var team = $(input).data('team');
+    var round = $(input).data('round');
+    var data = JSON.stringify({quizId:quiz,teamId:team,answerId:answerId,points:points,round:round,half:true,correct:true});
 
     ajaxRequest('GET','markAnswer','answerMarked',data);
 }
@@ -51,14 +62,18 @@ function answerMarked(json) {
     $('#' + response.team + '_round_total_score').html(response.round_total);
     $('#' + response.team + '_total_score').html(response.total);
 
-    $('#' + response.answer + '_correct, #' + response.answer + '_incorrect, #' + response.answer).removeClass('correct incorrect');
-
-    if(response.correct) {
+    $('#' + response.answer + '_correct, #' + response.answer + '_select, #' + response.answer + '_incorrect, #' + response.answer + '_half, #' + response.answer).removeClass('correct incorrect half-point');
+    console.log(response);
+    if(response.half) {
+        $('#' + response.answer + '_half').addClass('half-point');
+        $('#' + response.answer + '_select').addClass('half-point');
+    } else if(response.correct) {
         $('#' + response.answer + '_correct').addClass('correct');
+        $('#' + response.answer + '_select').addClass('correct');
         $('#' + response.answer ).addClass('correct')
     } else {
         $('#' + response.answer + '_incorrect').addClass('incorrect');
-        $('#' + response.answer ).val(0);
+        $('#' + response.answer + '_select' ).val(0);
     }
 
 

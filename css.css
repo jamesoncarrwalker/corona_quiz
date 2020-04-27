@@ -91,7 +91,7 @@ body{
     background-color:#82E0AA;
 }
 
-.award_glyph.correct {
+.award_glyph.correct,select.correct {
     background-color: #2ECC71;
 }
 .glyphicon.glyphicon-remove.marksheet:hover {
@@ -99,6 +99,8 @@ body{
 }
 .award_glyph.incorrect {
     background-color: #EC7063;
+}.award_glyph.half-point,select.half-point {
+    background-color: #F7DC6F;
 }
 .available_points_for_question {
     font-size: x-small;
