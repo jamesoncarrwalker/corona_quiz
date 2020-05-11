@@ -6,9 +6,8 @@
     height: 250px;
 }
 
-.dicks_header .sign.icon {
+.dicks_header .icon img {
     height: 50px!important;
-    background-position: right;
 }
 
 body{
@@ -16,25 +15,26 @@ body{
 }
 
 .dicks_header {
-    background-color: #AED6F1;
+    background-color: #000;
+    color:white;
     padding: 12px;
     min-height: 50px;
     margin-bottom: 12px;
 }
 
 .edge.bottom {
-    border-bottom: 1px solid #3498DB;
+    border-bottom: 10px solid #ABB2B9;
 }
 
 .edge.left {
-    border-left: 1px solid #3498DB;
+    border-left: 1px solid #ABB2B9;
 }
 .edge.right {
-    border-right: 1px solid #3498DB;
+    border-right: 1px solid #ABB2B9;
 }
 
 .edge.top {
-    border-top: 1px solid #3498DB;
+    border-top: 1px solid #ABB2B9;
 }
 
 .section_heading {
@@ -50,6 +50,22 @@ body{
 .dicks_nav li {
     margin: 5px;
     padding: 5px;
+}
+
+.dicks_nav li a{
+    color:white;
+    transition: color 500ms;
+}
+.dicks_nav li:hover{
+    color:black !important;
+    background-color: white;
+    transition: background-color 500ms;
+    border-radius: 4px;
+}
+li:hover a {
+    color: inherit;
+    text-decoration: none;
+    transition: color 500ms;
 }
 
 .panel_list li, .panel {
@@ -113,4 +129,22 @@ body{
 .panel_description {
     padding-left: 12px;
     font-size: xx-small;
+}
+.btn-dicks {
+    background-color: #000000;
+    color: white;
+    transition: background-color 200ms, color 200ms;
+}
+
+.btn-dicks:hover {
+    background-color: #fff;
+    color: black;
+    border: 1px solid black;
+    transition: background-color 200ms, color 200ms;
+}
+
+.hand-written{
+    font: 400 130px/0.8 'Great Vibes', Helvetica, sans-serif;
+    color: #000;
+    text-shadow: 4px 4px 3px rgba(0,0,0,0.1);
 }
