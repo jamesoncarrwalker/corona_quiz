@@ -16,7 +16,7 @@ function ajaxRequest(method,call,response,data,file) {
         }
     };
     var requested = new Date().getTime();
-    xmlhttp.open(method,"/quizatthedicks/ajax.php?endpoint="+call+"&data="+encodeURIComponent(data)+"&requested="+requested,true);
+    xmlhttp.open(method,root + "ajax.php?endpoint="+call+"&data="+encodeURIComponent(data)+"&requested="+requested,true);
     if(file) {
         xmlhttp.send(file);
     } else {
@@ -63,7 +63,6 @@ function answerMarked(json) {
     $('#' + response.team + '_total_score').html(response.total);
 
     $('#' + response.answer + '_correct, #' + response.answer + '_select, #' + response.answer + '_incorrect, #' + response.answer + '_half, #' + response.answer).removeClass('correct incorrect half-point');
-    console.log(response);
     if(response.half) {
         $('#' + response.answer + '_half').addClass('half-point');
         $('#' + response.answer + '_select').addClass('half-point');
