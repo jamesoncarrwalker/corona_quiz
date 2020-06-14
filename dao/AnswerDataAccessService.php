@@ -122,5 +122,19 @@ class AnswerDataAccessService {
 
     }
 
+    public function getScoresOverviewForRound(string $quizId,string $roundId) {
+        $q = $this->conn->prepare("SELECT answer.team_UUID as team,
+                                   SUM(IF(question.round = :round AND answer.points > 0,answer.points,0) ) as roundTotal,
+                                   SUM(IF(answer.points > 0,answer.points,0)) as quizTotal
+                                   FROM answer
+                                   INNER JOIN question ON (question.quiz_UUID = answer.quiz_UUID AND question.UUID = answer.question_UUID)
+                                   WHERE answer.quiz_UUID = :quiz
+                                   GROUP BY answer.team_UUID");
+        $q->bindParam(':round',$roundId,PDO::PARAM_STR);
+        $q->bindParam(':quiz',$quizId,PDO::PARAM_STR);
+        $q->execute();
+        return $q->fetchAll();
+
+    }
 
 }

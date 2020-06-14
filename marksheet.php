@@ -45,7 +45,9 @@ if($canMarkQuiz && !isset($_GET['quiz_id'])) {
     $teams = $teamDao->getTeamsForQuiz($quiz->UUID);
     $roundsDao = new RoundDataAccessService($pdo);
     $answerDao = new AnswerDataAccessService($pdo);
+    $marksheetDao = new MarksheetDataAccessService($pdo);
     $rounds = $roundsDao->getAllRoundForQuiz($quiz->UUID);
+    $roundsWithAssignedMarksheets = $marksheetDao->getRoundsWithAssignedMarksheets($quiz->UUID);
 
     if(isset($_GET['round'])) {
         $round = $roundsDao->getRoundById($_GET['round'], $quiz->UUID);
@@ -90,7 +92,9 @@ if($canMarkQuiz && !isset($_GET['quiz_id'])) {
                     <li class="section_heading">Invitation code</li>
                     <li class="panel"><?echo $quiz->invitation_code?></li>
                     <li class="section_heading">Rounds: </li>
-                    <?foreach($rounds as $r){?>
+                    <?foreach($rounds as $r){
+                        $marksheetsAssigned = in_array($r->UUID,$roundsWithAssignedMarksheets);
+                        ?>
                         <li class=" panel <? if(isset($round) && $round->UUID == $r->UUID) echo 'active' ?>"><a href="marksheet.php?quiz_id=<?echo $quiz->UUID?>&round=<?echo $r->UUID?>"><?echo $r->title?></a>
                         </li>
                         <li class="panel_description"> Show questions to teams?
@@ -98,6 +102,13 @@ if($canMarkQuiz && !isset($_GET['quiz_id'])) {
 
                             <span id="<?echo $r->UUID?>_questions_hidden" class="glyphicon glyphicon-remove marksheet award_glyph <? echo ($r->show_answers < 1 ? 'incorrect' : '')?>" onclick="updateShowRoundQuestions('<?echo $quiz->UUID?>','<?echo $r->UUID?>', false)"></span>
                         </li>
+                        <li class="panel_description"><span id="<?echo $r->UUID?>_marksheets_label"> <?echo $marksheetsAssigned ? "Re-assign marksheets" : "Hand out marksheets"?></span>
+                            <span id="<?echo $r->UUID?>_marksheets_set" class="glyphicon glyphicon-ok marksheet award_glyph <?echo ($marksheetsAssigned ? 'correct' : '')?> " onclick="handOutMarksheets('<?echo $quiz->UUID ?>','<?echo $r->UUID?>',<?echo $marksheetsAssigned?>)"></span>
+
+                            <span id="<?echo $r->UUID?>_marksheets_unset" class="glyphicon glyphicon-remove marksheet award_glyph <? echo (!$marksheetsAssigned ? 'incorrect' : '')?>" onclick="removeMarksheets('<?echo $quiz->UUID?>','<?echo $r->UUID?>')"></span>
+                        </li>
+
+
                     <?}?>
                 </ul>
             </div>
@@ -198,5 +209,13 @@ if($canMarkQuiz && !isset($_GET['quiz_id'])) {
 </body>
 
 <?include_once("template/toe.php")?>
+<? if(isset($roundsWithAssignedMarksheets) && isset($round) && in_array($round->UUID,$roundsWithAssignedMarksheets)) {?>
+    <script>
+        $(function() {
+            listenForScoreUpdates("<?echo $quiz->UUID?>","<?echo $round->UUID?>");
+        });
 
+
+    </script>
+<?}?>
 </html>

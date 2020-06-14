@@ -57,4 +57,15 @@ class TeamDataAccessService {
         return $q->fetchAll(PDO::FETCH_KEY_PAIR);
     }
 
+    public function getTeamsForMarksheets(string $quizId, string $roundId) {
+        $q = $this->conn->prepare("SELECT DISTINCT(team_UUID)
+                                   FROM answer
+                                   INNER JOIN question ON (question.quiz_UUID = answer.quiz_UUID)
+                                   WHERE answer.quiz_UUID = :quiz
+                                   AND question.round = :round
+                                    ");
+        $q->execute([':round' => $roundId,':quiz' => $quizId]);
+        return $q->fetchAll(PDO::FETCH_COLUMN);
+    }
+
 }

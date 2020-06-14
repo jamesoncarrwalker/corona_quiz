@@ -2,6 +2,9 @@
  * Created by jamesskywalker on 31/03/2020.
  */
 
+var scoreUpdatesListener = null;
+var currentRound = null;
+var currentQuiz = null;
 
 function ajaxRequest(method,call,response,data,file) {
     var xmlhttp;
@@ -37,8 +40,6 @@ function markAnswerWithPoints(input) {
     var quiz = $(input).data('quiz');
     var team = $(input).data('team');
     var round = $(input).data('round');
-
-    console.log('points submitted: ',points);
     var data = JSON.stringify({quizId:quiz,teamId:team,answerId:answerId,points:points,round:round});
 
     ajaxRequest('GET','markAnswer','answerMarked',data);
@@ -137,3 +138,69 @@ function updatedRoundQuestionVisibility(json) {
     }
 }
 
+function handOutMarksheets(quiz,round,reAssign) {
+    var json = JSON.stringify({quiz:quiz,round:round});
+    var endpoint = reAssign ? 'reassignMarksheets' : 'assignMarksheets';
+    ajaxRequest('GET',endpoint,'updateMarksheetResponse',json);
+}
+
+function removeMarksheets(quiz,round) {
+    var json = JSON.stringify({quiz:quiz,round:round});
+    ajaxRequest('GET','removeMarksheets','updateMarksheetResponse',json);
+}
+
+function updateMarksheetResponse(json) {
+
+    var response = JSON.parse(json);
+    if(
+        (response.hasOwnProperty('removed') && response.removed === true) ||
+        (response.hasOwnProperty('assigned') && response.assigned === true)
+
+    ) {
+        var assigned = $('#' + response.round + '_marksheets_set').removeClass('correct');
+        var removed = $('#' + response.round + '_marksheets_unset').removeClass('incorrect');
+
+        if (response.assigned) {
+            assigned.addClass('correct');
+            $('#' + response.round + '_marksheets_label').text("Reassign marksheets");
+            listenForScoreUpdates(response.quiz, response.round)
+        } else {
+            removed.addClass('incorrect');
+            $('#' + response.round + '_marksheets_label').text("Assign marksheets");
+            if(scoreUpdatesListener !== null) {
+                clearInterval(scoreUpdatesListener);
+                scoreUpdatesListener = null;
+            }
+        }
+    }
+
+}
+
+
+function listenForScoreUpdates(quiz,round) {
+    currentRound = round;
+    currentQuiz = quiz;
+    if(scoreUpdatesListener !== null) {
+        clearInterval(scoreUpdatesListener);
+        scoreUpdatesListener = null;
+    }
+    scoreUpdatesListener = setInterval(sendScoresUpdateRequest,5000);
+}
+
+function sendScoresUpdateRequest() {
+    if(currentRound === null) {
+        return;
+    }
+    var json = JSON.stringify({round:currentRound,quiz:currentQuiz});
+    ajaxRequest('GET','getUpdatedScores','updateAllScores',json);
+}
+
+function updateAllScores(json) {
+    var response = JSON.parse(json);
+    $.each(response.scores,function(key,score){
+        const team = score.team;
+        $('#' + team + '_total_score').text(score.quizTotal);
+        $('#' + team + '_round_total_score').text(score.roundTotal);
+    });
+
+}

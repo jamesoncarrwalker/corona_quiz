@@ -28,6 +28,11 @@ foreach (glob("auth/*.php") as $filename)
     include_once($filename);
 }
 
+foreach (glob("helpers/*.php") as $filename)
+{
+    include_once($filename);
+}
+
 
 
 $tokenChecker = new CheckAuthToken();

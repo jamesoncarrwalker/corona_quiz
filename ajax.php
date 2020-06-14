@@ -68,10 +68,65 @@ if(isset($endpoint)) {
         $response = ['updated' => $roundDao->setRoundQuestionVisibility($data->quiz,$data->round,$data->show),'round' => $data->round,'show' => $data->show];
         $return = addslashes(json_encode($response));
         echo $return;
+    } else if ($endpoint == 'assignMarksheets' || $endpoint == 'reassignMarksheets') {
+        if(isset($data->quiz)) {
+            if(isset($data->round)) {
+                $teamDao = new TeamDataAccessService($pdo);
+                $marksheetDao = new MarksheetDataAccessService($pdo);
+
+                if($endpoint == 'reassignMarksheets') {
+                    $marksheetDao->clearMarksheetAssignmentForRound($data->quiz,$data->round);
+                }
+
+                $teamsWithAnswers = $teamDao->getTeamsForMarksheets($data->quiz,$data->round);
+
+
+
+                $teams = MarksheetAssigner::assignMarksheets($teamsWithAnswers);
+
+
+                $response = ['assigned' => $marksheetDao->setMarksheetForRound($data->quiz,$data->round,$teams),'round' => $data->round,'quiz' => $data->quiz];
+                $return = addslashes(json_encode($response));
+                echo $return;
+
+            } else {
+                echo "No round specified";
+            }
+
+        } else {
+            echo "No quiz specified";
+        }
+
+    } else if ($endpoint == 'removeMarksheets') {
+        if(isset($data->quiz)) {
+            if(isset($data->round)) {
+                $marksheetDao = new MarksheetDataAccessService($pdo);
+
+
+                $response = ['removed' => $marksheetDao->clearMarksheetAssignmentForRound($data->quiz,$data->round),'round' => $data->round,'quiz' => $data->quiz];
+                $return = addslashes(json_encode($response));
+                echo $return;
+
+            } else {
+                echo "No round specified";
+            }
+
+        } else {
+            echo "No quiz specified";
+        }
+    } else if ($endpoint == 'getUpdatedScores') {
+        $answerDao = new AnswerDataAccessService($pdo);
+
+        $overview = $answerDao->getScoresOverviewForRound($data->quiz,$data->round);
+
+        $response = ['scores' => $overview,'round' => $data->round];
+        $return = addslashes(json_encode($response));
+        echo $return;
+
     } else {
         echo 'invalid endpoint';
     }
 
-} else {
+}  else {
     echo 'no endpoint';
 }
