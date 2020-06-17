@@ -32,7 +32,7 @@ class MarksheetDataAccessService {
             $pdoBindArray[':round_' . $i] = $roundId;
             $pdoBindArray[':toMark_' . $i] = $toMark;
             $pdoBindArray[':markedBy_' . $i] = $markedBy;
-
+            $i++;
 
         }
         $sql = implode(',', $sql);
@@ -57,6 +57,19 @@ class MarksheetDataAccessService {
         $q->bindParam(':quiz',$quizId,PDO::PARAM_STR);
         $q->execute();
         return $q->fetchAll(PDO::FETCH_COLUMN);
+    }
+
+    public function getTeamToMark(string $quiz,string $round,string $team) {
+        $q = $this->conn->prepare("  SELECT team_to_mark
+                                     FROM assigned_marksheet
+                                     WHERE quiz_UUID = :quiz
+                                     AND round_UUID = :round
+                                     AND round_marked_by = :team");
+        $q->bindParam(':quiz',$quiz,PDO::PARAM_STR);
+        $q->bindParam(':round',$round,PDO::PARAM_STR);
+        $q->bindParam(':team',$team,PDO::PARAM_STR);
+        $q->execute();
+        return $q->fetchColumn();
     }
 }
 

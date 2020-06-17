@@ -14,8 +14,8 @@ class AnswerDataAccessService {
         $this->conn = $conn->connect();
     }
 
-    public function getTeamAnswersForRound(string $team,string $quiz,string $round) {
-        $q = $this->conn->prepare("SELECT answer.*, question.title
+    public function getTeamAnswersForRound(string $team, string $quiz, string $round) {
+        $q = $this->conn->prepare("SELECT answer.*, question.title, question.points AS points_available,question.round
                                     FROM answer
                                     INNER JOIN question
                                     ON (question.quiz_UUID = answer.quiz_UUID

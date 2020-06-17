@@ -204,3 +204,75 @@ function updateAllScores(json) {
     });
 
 }
+
+function showPanel(className) {
+    const panelToShow = $('.' + className);
+
+    if($(panelToShow).hasClass('hidden')) {
+        $('.toggle_panel').addClass('hidden');
+        $(panelToShow).removeClass('hidden');
+    }
+}
+
+var marksheetListener = null;
+
+function listenForAnswerSheet(quiz,round,team,marksheetTeam){
+    if(marksheetListener !== null) {
+        clearInterval(marksheetListener);
+    }
+
+    marksheetListener = setInterval(checkForMarksheet.bind(this,quiz,round,team,marksheetTeam),5000);
+
+}
+
+function checkForMarksheet(quiz,round,team,marksheetTeam) {
+
+    const json = JSON.stringify({quiz:quiz,round:round,team:team,marksheetTeam:marksheetTeam});
+    ajaxRequest('GET','checkForMarksheet','checkForMarksheetResponse',json);
+}
+
+function checkForMarksheetResponse(json) {
+    const response = JSON.parse(json);
+    if(response.update) {
+        listenForAnswerSheet(response.quiz,response.round,response.team,(response.teamToMark === false ? null : response.teamToMark));
+        setMarksheet(response.teamAnswers);
+
+    }
+
+}
+
+function setMarksheet(teamAnswers) {
+
+    if(teamAnswers.length < 1) {
+        $('#marksheetMessage').removeClass('hidden');
+        $('#marksheetAnswers').addClass('hidden').html("");
+    } else {
+        var html = "";
+        $.each(teamAnswers,function(key,answer){
+            html += '<li><strong>' + answer.title + "</strong></br>" +
+                    "" + answer.answer;
+            if(answer.points_available == 1) {
+                html += '<span id="' + answer.UUID + '_correct" class="glyphicon glyphicon-ok marksheet award_glyph ' + (answer.points > 0.5 ? 'correct' : '') + '" onclick="markAnswer(\''+ answer.quiz_UUID + '\',\'' + answer.team_UUID + '\', \'' +  answer.UUID + '\',\'' +  answer.round + '\', true)"></span> '+
+                        '<span id="' + answer.UUID + '_half" data-id="' + answer.UUID + '" data-quiz="' + answer.quiz_UUID + '"  data-team="' +  answer.team_UUID + '" data-round="' + answer.round + '?>" onclick="markAnswerWithHalf(this)" class=" marksheet award_glyph ' + (answer.points == 0.5 ? 'half-point' : '') + ' ">1/2</span>';
+            } else {
+
+           html +='<select id="' +  answer.UUID + '_select" data-id="' + answer.UUID + '" data-quiz="' + answer.quiz_UUID + '"  data-team="' + answer.team_UUID + '" data-round="' + answer.round + '" class="' + (answer.points == 0.5 ? 'half-point' : (answer.points > 0.5 ? 'correct' : '')) + '" onchange="markAnswerWithPoints(this)">';
+
+
+
+                for(var i = 0; i <= answer.points_available; i += 0.5) {
+                    html += '<option ' + (i == answer.points ? "selected=\"true\"" : "" ) + ' value="' + i + '">' + i + '</option>';
+                }
+            html += '</select>';
+            }
+
+            html +=  "</li>";
+        });
+        $('#marksheetAnswers').html(html);
+        $('#marksheetMessage').addClass('hidden');
+        $('#marksheetAnswers').removeClass('hidden');
+
+
+
+    }
+}

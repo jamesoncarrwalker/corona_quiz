@@ -123,6 +123,30 @@ if(isset($endpoint)) {
         $return = addslashes(json_encode($response));
         echo $return;
 
+    } else if ($endpoint == 'checkForMarksheet') {
+        $marksheetDao = new MarksheetDataAccessService($pdo);
+        $teamToMark = $marksheetDao->getTeamToMark($data->quiz,$data->round,$data->team);
+
+        $updateAnswers = false;
+        if(!isset($data->marksheetTeam) && $teamToMark !== false) {
+            $updateAnswers = true;
+        }
+
+        if(isset($data->marksheetTeam) && $data->marksheetTeam && $data->marksheetTeam != $teamToMark) {
+            $updateAnswers = true;
+        }
+
+        if($updateAnswers) {
+            $answerDao = new AnswerDataAccessService($pdo);
+            $teamAnswers = $answerDao->getTeamAnswersForRound($teamToMark,$data->quiz,$data->round);
+        } else {
+            $teamAnswers = [];
+        }
+
+        $response = ['teamToMark' => $teamToMark,'teamAnswers' => $teamAnswers, 'update' => $updateAnswers,'team' => $data->team,'round' => $data->round,'quiz' => $data->quiz];
+        $return = addslashes(json_encode($response));
+        echo $return;
+
     } else {
         echo 'invalid endpoint';
     }

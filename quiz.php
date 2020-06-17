@@ -12,6 +12,7 @@ $teamDao = new TeamDataAccessService($pdo);
 $roundDao = new RoundDataAccessService($pdo);
 $questionDao = new QuestionDataAccessService($pdo);
 $answerDao = new AnswerDataAccessService($pdo);
+$marksheetDao = new MarksheetDataAccessService($pdo);
 $quiz = [];
 $list = true;
 
@@ -66,23 +67,29 @@ $questions = $questionDao->getQuestionsForRound($quiz->UUID,$round->UUID);
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center">
             <h1><?echo $quiz->title?></h1>
-            <h2>Round: <?echo $round->title?></h2>
         </div>
     </div>
 
     <div class="row">
         <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3" style="min-height: 250px;">
+            <h4><?echo $team->team_name?></h4>
             <h4 class="section_heading">Rounds</h4>
             <ul class="list-unstyled panel_list">
                <?foreach($rounds as $r){?>
                    <a href="quiz.php?quiz_id=<?echo $quiz->UUID?>&round=<?echo $r->UUID?>"><li class="panel <?if($r->UUID == $round->UUID) echo "active";?>">
                             <?echo $r->title?>
-                         ( score: <?echo $pointsPerRound[$r->UUID]?? '/'?> ) </li></a>
+                         ( score: <span id="<?echo $team->UUID?>_round_total_score"><?echo $pointsPerRound[$r->UUID]?? '/'?> )</span></li></a>
                 <?}?>
-                <li>Total : <? echo abs($answerDao->getTeamScoreForQuiz($team->UUID,$quiz->UUID))?></li>
+                <li>Total : <span id="<?echo $team->UUID?>_total_score"><? echo abs($answerDao->getTeamScoreForQuiz($team->UUID,$quiz->UUID))?></span></li>
             </ul>
         </div>
-        <div class="col-xs-12 col-sm-9 col-md-9 col-lg-9 edge left">
+
+        <div class="col-xs-12 col-sm-9 col-md-9 col-lg-9 edge left ">
+            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 text-center toggle_panel_control" onclick="showPanel('user_answers')"><h4>Your answers</h4></div>
+            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 text-center toggle_panel_control"  onclick="showPanel('user_marksheet')"><h4>Mark another team</h4></div>
+        </div>
+
+        <div class="col-xs-12 col-sm-9 col-md-9 col-lg-9 edge left user_answers toggle_panel">
             <?php if($canAnswer){?>
             <form action="" method="post">
                 <?$i = 1;?>
@@ -101,7 +108,6 @@ $questions = $questionDao->getQuestionsForRound($quiz->UUID,$round->UUID);
                 <button name="answers" type="submit" class="btn btn-primary mb-2 submit_button">Submit answers</button>
             </form>
             <?} else {?>
-            <h2>You've already completed this round</h2>
                 <ol >
                     <?$i = 0;?>
                     <?foreach($answers as $answer){?>
@@ -115,6 +121,13 @@ $questions = $questionDao->getQuestionsForRound($quiz->UUID,$round->UUID);
 
             <?}?>
         </div>
+
+        <div class="col-xs-12 col-sm-9 col-md-9 col-lg-9 edge left user_marksheet toggle_panel hidden">
+            <p id="marksheetMessage">you can mark another teams answers here if your quiz master has set this up</p>
+            <ol id="marksheetAnswers"></ol>
+
+        </div>
+
     </div>
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -125,5 +138,10 @@ $questions = $questionDao->getQuestionsForRound($quiz->UUID,$round->UUID);
 </body>
 
 <?include_once("template/toe.php")?>
+<script>
+    $(function() {
+        listenForAnswerSheet("<?echo $quiz->UUID?>","<?echo $round->UUID?>","<?echo $team->UUID?>");
+    });
+</script>
 
 </html>
