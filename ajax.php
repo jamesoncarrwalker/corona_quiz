@@ -116,10 +116,14 @@ if(isset($endpoint)) {
         }
     } else if ($endpoint == 'getUpdatedScores') {
         $answerDao = new AnswerDataAccessService($pdo);
+        if(isset($data->team)) {
+            $overview = $answerDao->getScoresOverviewForRoundForTeam($data->quiz,$data->round,$data->team);
+            $response = ['scores' => $overview,"forTeam" => true,'total' => array_sum(array_values($overview))];
+        } else{
+            $overview = $answerDao->getScoresOverviewForRound($data->quiz,$data->round);
 
-        $overview = $answerDao->getScoresOverviewForRound($data->quiz,$data->round);
-
-        $response = ['scores' => $overview,'round' => $data->round];
+            $response = ['scores' => $overview,'round' => $data->round];
+        }
         $return = addslashes(json_encode($response));
         echo $return;
 

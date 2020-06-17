@@ -78,9 +78,9 @@ $questions = $questionDao->getQuestionsForRound($quiz->UUID,$round->UUID);
                <?foreach($rounds as $r){?>
                    <a href="quiz.php?quiz_id=<?echo $quiz->UUID?>&round=<?echo $r->UUID?>"><li class="panel <?if($r->UUID == $round->UUID) echo "active";?>">
                             <?echo $r->title?>
-                         ( score: <span id="<?echo $team->UUID?>_round_total_score"><?echo $pointsPerRound[$r->UUID]?? '/'?> )</span></li></a>
+                         ( score: <span id="<?echo $r->UUID?>_total_score"><?echo $pointsPerRound[$r->UUID]?? '/'?></span> )</li></a>
                 <?}?>
-                <li>Total : <span id="<?echo $team->UUID?>_total_score"><? echo abs($answerDao->getTeamScoreForQuiz($team->UUID,$quiz->UUID))?></span></li>
+                <li>Total : <span id="team_total_score"><? echo abs($answerDao->getTeamScoreForQuiz($team->UUID,$quiz->UUID))?></span></li>
             </ul>
         </div>
 
@@ -141,6 +141,7 @@ $questions = $questionDao->getQuestionsForRound($quiz->UUID,$round->UUID);
 <script>
     $(function() {
         listenForAnswerSheet("<?echo $quiz->UUID?>","<?echo $round->UUID?>","<?echo $team->UUID?>");
+        getTeamScoresUpdate("<?echo $quiz->UUID?>","<?echo $round->UUID?>","<?echo $team->UUID?>");
     });
 </script>
 

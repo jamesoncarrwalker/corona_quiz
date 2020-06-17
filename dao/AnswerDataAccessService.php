@@ -132,8 +132,23 @@ class AnswerDataAccessService {
                                    GROUP BY answer.team_UUID");
         $q->bindParam(':round',$roundId,PDO::PARAM_STR);
         $q->bindParam(':quiz',$quizId,PDO::PARAM_STR);
+        if(isset($team)) $q->bindParam(':team',$team,PDO::PARAM_STR);
         $q->execute();
         return $q->fetchAll();
+
+    }
+
+    public function getScoresOverviewForRoundForTeam(string $quizId,string $roundId, string $team = null) {
+        $q = $this->conn->prepare("SELECT question.round, SUM(IF(answer.points > 0,answer.points,0) ) as roundTotal
+                                   FROM answer
+                                   INNER JOIN question ON (question.quiz_UUID = answer.quiz_UUID AND question.UUID = answer.question_UUID)
+                                   WHERE answer.quiz_UUID = :quiz
+                                   AND answer.team_UUID = :team
+                                   GROUP BY question.round");
+        $q->bindParam(':quiz',$quizId,PDO::PARAM_STR);
+        $q->bindParam(':team',$team,PDO::PARAM_STR);
+        $q->execute();
+        return $q->fetchAll(PDO::FETCH_KEY_PAIR);
 
     }
 

@@ -195,13 +195,29 @@ function sendScoresUpdateRequest() {
     ajaxRequest('GET','getUpdatedScores','updateAllScores',json);
 }
 
+function getTeamScoresUpdate(quiz,round,team) {
+    setInterval(function(){
+        var json = JSON.stringify({round:round,quiz:quiz,team:team});
+        ajaxRequest('GET','getUpdatedScores','updateAllScores',json);
+    }, 2000)
+}
+
 function updateAllScores(json) {
     var response = JSON.parse(json);
-    $.each(response.scores,function(key,score){
-        const team = score.team;
-        $('#' + team + '_total_score').text(score.quizTotal);
-        $('#' + team + '_round_total_score').text(score.roundTotal);
-    });
+    if(response.forTeam) {
+
+        $.each(response.scores,function(key,score){
+            $('#' + key + '_total_score').text(score);
+            $('#team_total_score').text(score.total);
+        });
+    } else {
+        $.each(response.scores,function(key,score){
+            const team = score.team;
+            $('#' + team + '_total_score').text(score.quizTotal);
+            $('#' + team + '_round_total_score').text(score.roundTotal);
+        });
+    }
+
 
 }
 
