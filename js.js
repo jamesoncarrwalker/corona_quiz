@@ -78,16 +78,13 @@ function updateMarkedAnswers(json) {
 
 
     $.each(response,function(key,answers) {
-        //console.log({"the answer is":answer});
         $.each(answers,function(key,answer){
             $.each(answer,function(key,an) {
-                console.log(an);
                 removeActiveClassForAnswer(an.UUID,true);
                 const correct = an.points > 0;
                 const half = an.points == 0.5;
-                setActivePoint(an.UUID,correct,half,an.points,true);
+                setActivePoint(an.UUID,correct,half,an.points);
             });
-            //console.log("each andswer is:",answer);
 
         });
 
@@ -96,15 +93,11 @@ function updateMarkedAnswers(json) {
 
 }
 
-function removeActiveClassForAnswer(answer,fromteam) {
-    if(fromteam) {
-        console.log({"ln 94":answer});
-    }
+function removeActiveClassForAnswer(answer) {
     $('#' + answer + '_correct, #' + answer + '_select, #' + answer + '_incorrect, #' + answer + '_half, #' + answer).removeClass('correct incorrect half-point');
 }
 
-function setActivePoint(answer, correct, half, pointsVal,fromteam) {
-    console.log({"ln 100":[answer, correct, half, pointsVal]});
+function setActivePoint(answer, correct, half, pointsVal) {
     if(half) {
         $('#' + answer + '_half').addClass('half-point');
         $('#' + answer + '_select').addClass('half-point');
