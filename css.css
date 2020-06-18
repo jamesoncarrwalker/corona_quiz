@@ -71,14 +71,16 @@ li:hover a {
 .panel_list li, .panel {
 
     padding: 12px;
-    background-color: #AED6F1   ;
+    background-color: #000000;   ;
     margin:8px;
     border-radius: 5px;
 
 }
 
 .panel_list li.active, .panel.active {
-    background-color:#5DADE2;
+    background-color:white;
+    color:black;
+    border: 1px solid black;
 }
 
 .panel, .panel_list li a, .panel a {
@@ -130,21 +132,30 @@ li:hover a {
     padding-left: 12px;
     font-size: xx-small;
 }
-.btn-dicks {
+.btn-dicks, .toggle_panel_control {
     background-color: #000000;
     color: white;
     transition: background-color 200ms, color 200ms;
 }
 
-.btn-dicks:hover {
+.btn-dicks:hover, .toggle_panel_control.active {
     background-color: #fff;
     color: black;
     border: 1px solid black;
     transition: background-color 200ms, color 200ms;
 }
-
+.toggle_panel_control {
+    border-radius: 5px;
+}
+.toggle_panel_control:hover {
+    cursor: pointer;
+}
 .hand-written{
     font: 400 130px/0.8 'Great Vibes', Helvetica, sans-serif;
     color: #000;
     text-shadow: 4px 4px 3px rgba(0,0,0,0.1);
+}
+
+#team_total_score{
+    color:white;
 }

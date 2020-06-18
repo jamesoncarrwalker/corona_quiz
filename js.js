@@ -266,6 +266,14 @@ function showPanel(className) {
         $('.toggle_panel').addClass('hidden');
         $(panelToShow).removeClass('hidden');
     }
+
+    $('.toggle_panel_control').each(function(){
+        if($(this).hasClass('active')) {
+            $(this).removeClass('active');
+        } else {
+            $(this).addClass('active');
+        }
+    });
 }
 
 var marksheetListener = null;

@@ -85,7 +85,7 @@ $questions = $questionDao->getQuestionsForRound($quiz->UUID,$round->UUID);
         </div>
 
         <div class="col-xs-12 col-sm-9 col-md-9 col-lg-9 edge left ">
-            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 text-center toggle_panel_control" onclick="showPanel('user_answers')"><h4>Your answers</h4></div>
+            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 text-center toggle_panel_control active" onclick="showPanel('user_answers')"><h4>Your answers</h4></div>
             <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 text-center toggle_panel_control"  onclick="showPanel('user_marksheet')"><h4>Mark another team</h4></div>
         </div>
 
