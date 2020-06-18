@@ -112,6 +112,9 @@ function setActivePoint(answer, correct, half, pointsVal) {
         $('#' + answer + '_incorrect').addClass('incorrect');
         $('#' + answer + '_select' ).val(0);
     }
+
+    $('#' + answer +'_points_awarded').text(pointsVal > 0 ? pointsVal : 0);
+
 }
 
 function saveQuestions(quizMasterId, quizId,roundId) {

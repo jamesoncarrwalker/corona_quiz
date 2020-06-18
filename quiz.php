@@ -114,7 +114,7 @@ $questions = $questionDao->getQuestionsForRound($quiz->UUID,$round->UUID);
                         <li><strong><?echo $questions[$i]->title ?> ?  </strong><?echo $answer->answer?>
                             <span id="<?echo $answer->UUID?>_correct" class="glyphicon glyphicon-ok award_glyph <? echo ($answer->points > 0 ? 'correct' : '')?> " ></span>
                             <span id="<?echo $answer->UUID ?>_incorrect" class="glyphicon glyphicon-remove award_glyph <? echo ($answer->points < 0 ? 'incorrect' : '') ?>" ></span>
-                            <span class="available_points_for_question"><?echo ($answer->points > 0 ? $answer->points : 0)?> / <?echo $questions[$i]->points?></span>
+                            <span class="available_points_for_question"><span id="<?echo $answer->UUID ?>_points_awarded"><?echo ($answer->points > 0 ? $answer->points : 0)?></span> / <?echo $questions[$i]->points?></span>
                         </li>
                     <?$i++;}?>
                 </ol>
@@ -142,6 +142,7 @@ $questions = $questionDao->getQuestionsForRound($quiz->UUID,$round->UUID);
     $(function() {
         listenForAnswerSheet("<?echo $quiz->UUID?>","<?echo $round->UUID?>","<?echo $team->UUID?>");
         getTeamScoresUpdate("<?echo $quiz->UUID?>","<?echo $round->UUID?>","<?echo $team->UUID?>");
+        getMarkedAnswers("<?echo $quiz->UUID?>","<?echo $round->UUID?>");
     });
 </script>
 
