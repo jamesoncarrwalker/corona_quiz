@@ -117,7 +117,7 @@ if(isset($endpoint)) {
     } else if ($endpoint == 'getUpdatedScores') {
         $answerDao = new AnswerDataAccessService($pdo);
         if(isset($data->team)) {
-            $overview = $answerDao->getScoresOverviewForRoundForTeam($data->quiz,$data->round,$data->team);
+            $overview = $answerDao->getScoresOverviewForRoundForTeam($data->quiz,$data->team);
             $response = ['scores' => $overview,"forTeam" => true,'total' => array_sum(array_values($overview))];
         } else{
             $overview = $answerDao->getScoresOverviewForRound($data->quiz,$data->round);
@@ -127,7 +127,15 @@ if(isset($endpoint)) {
         $return = addslashes(json_encode($response));
         echo $return;
 
-    } else if ($endpoint == 'checkForMarksheet') {
+    } else if ($endpoint == 'getMarkedAnswers') {
+        $answerDao = new AnswerDataAccessService($pdo);
+        $answers = $answerDao->getQuestionsWithAnswersForRound($data->quiz,$data->round);
+        $response = ['answers' => $answers];
+
+        $return = addslashes(json_encode($response));
+        echo $return;
+
+    }else if ($endpoint == 'checkForMarksheet') {
         $marksheetDao = new MarksheetDataAccessService($pdo);
         $teamToMark = $marksheetDao->getTeamToMark($data->quiz,$data->round,$data->team);
 

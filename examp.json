@@ -1,0 +1,5 @@
+{\"teamToMark\":\"2fb95a62-ae1f-11ea-934b-acbc32b8cce5\",\"teamAnswers\":[
+
+
+
+{\"UUID\":\"ffd50806-ae4a-11ea-934b-acbc32b8cce5\",\"quiz_UUID\":\"cfee42f0-ae1e-11ea-934b-acbc32b8cce5\",\"team_UUID\":\"2fb95a62-ae1f-11ea-934b-acbc32b8cce5\",\"question_UUID\":\"d8c3585c-ae1e-11ea-934b-acbc32b8cce5\",\"answer\":\"team 2::1\",\"points\":\"1\",\"title\":\"one\"},{\"UUID\":\"ffd5412c-ae4a-11ea-934b-acbc32b8cce5\",\"quiz_UUID\":\"cfee42f0-ae1e-11ea-934b-acbc32b8cce5\",\"team_UUID\":\"2fb95a62-ae1f-11ea-934b-acbc32b8cce5\",\"question_UUID\":\"d8c36dc4-ae1e-11ea-934b-acbc32b8cce5\",\"answer\":\"team2::2\",\"points\":\"1\",\"title\":\"two\"},{\"UUID\":\"ffd56fb2-ae4a-11ea-934b-acbc32b8cce5\",\"quiz_UUID\":\"cfee42f0-ae1e-11ea-934b-acbc32b8cce5\",\"team_UUID\":\"2fb95a62-ae1f-11ea-934b-acbc32b8cce5\",\"question_UUID\":\"d8c36e50-ae1e-11ea-934b-acbc32b8cce5\",\"answer\":\"team2::3\",\"points\":\"0\",\"title\":\"three\"}],\"update\":true,\"team\":\"9c9f0110-af35-11ea-934b-acbc32b8cce5\",\"round\":\"cfee6a8c-ae1e-11ea-934b-acbc32b8cce5\",\"quiz\":\"cfee42f0-ae1e-11ea-934b-acbc32b8cce5\"}

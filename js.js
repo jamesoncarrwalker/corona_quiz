@@ -56,6 +56,12 @@ function markAnswerWithHalf(input) {
     ajaxRequest('GET','markAnswer','answerMarked',data);
 }
 
+
+function getMarkedAnswers(quiz,round) {
+    var data = JSON.stringify({quiz:quiz,round:round});
+    setInterval(ajaxRequest.bind(this,'GET','getMarkedAnswers','updateMarkedAnswers',data),3000);
+}
+
 function answerMarked(json) {
     var response = JSON.parse(json);
 
@@ -63,20 +69,56 @@ function answerMarked(json) {
     $('#' + response.team + '_round_total_score').html(response.round_total);
     $('#' + response.team + '_total_score').html(response.total);
 
-    $('#' + response.answer + '_correct, #' + response.answer + '_select, #' + response.answer + '_incorrect, #' + response.answer + '_half, #' + response.answer).removeClass('correct incorrect half-point');
-    if(response.half) {
-        $('#' + response.answer + '_half').addClass('half-point');
-        $('#' + response.answer + '_select').addClass('half-point');
-    } else if(response.correct) {
-        $('#' + response.answer + '_correct').addClass('correct');
-        $('#' + response.answer + '_select').addClass('correct');
-        $('#' + response.answer ).addClass('correct')
-    } else {
-        $('#' + response.answer + '_incorrect').addClass('incorrect');
-        $('#' + response.answer + '_select' ).val(0);
+    removeActiveClassForAnswer(response.answer);
+    setActivePoint(response.answer,response.correct,response.half,response.pointsVal);
+}
+
+function updateMarkedAnswers(json) {
+    var response = JSON.parse(json);
+
+
+    $.each(response,function(key,answers) {
+        //console.log({"the answer is":answer});
+        $.each(answers,function(key,answer){
+            $.each(answer,function(key,an) {
+                console.log(an);
+                removeActiveClassForAnswer(an.UUID,true);
+                const correct = an.points > 0;
+                const half = an.points == 0.5;
+                setActivePoint(an.UUID,correct,half,an.points,true);
+            });
+            //console.log("each andswer is:",answer);
+
+        });
+
+    });
+
+
+}
+
+function removeActiveClassForAnswer(answer,fromteam) {
+    if(fromteam) {
+        console.log({"ln 94":answer});
     }
+    $('#' + answer + '_correct, #' + answer + '_select, #' + answer + '_incorrect, #' + answer + '_half, #' + answer).removeClass('correct incorrect half-point');
+}
 
-
+function setActivePoint(answer, correct, half, pointsVal,fromteam) {
+    console.log({"ln 100":[answer, correct, half, pointsVal]});
+    if(half) {
+        $('#' + answer + '_half').addClass('half-point');
+        $('#' + answer + '_select').addClass('half-point');
+    } else if(correct) {
+        $('#' + answer + '_correct').addClass('correct');
+        $('#' + answer + '_select').addClass('correct');
+        if(pointsVal !== undefined) {
+            $('#' + answer + '_select').val(pointsVal);
+        }
+        $('#' + answer ).addClass('correct')
+    } else {
+        $('#' + answer + '_incorrect').addClass('incorrect');
+        $('#' + answer + '_select' ).val(0);
+    }
 }
 
 function saveQuestions(quizMasterId, quizId,roundId) {
@@ -282,13 +324,12 @@ function setMarksheet(teamAnswers) {
             html += '</select>';
             }
 
+            html += '<span id="' + answer.UUID + '_incorrect" class="glyphicon glyphicon-remove marksheet award_glyph ' +  (answer.points == -1 ? 'incorrect' : '') + '" onclick="markAnswer(\''+ answer.quiz_UUID + '\',\'' +  answer.team_UUID + '\', \'' + answer.UUID + '\',\'' + answer.round + '\', false)"></span>';
+
             html +=  "</li>";
         });
         $('#marksheetAnswers').html(html);
         $('#marksheetMessage').addClass('hidden');
         $('#marksheetAnswers').removeClass('hidden');
-
-
-
     }
 }

@@ -213,6 +213,7 @@ if($canMarkQuiz && !isset($_GET['quiz_id'])) {
     <script>
         $(function() {
             listenForScoreUpdates("<?echo $quiz->UUID?>","<?echo $round->UUID?>");
+            getMarkedAnswers("<?echo $quiz->UUID?>","<?echo $round->UUID?>");
         });
 
 

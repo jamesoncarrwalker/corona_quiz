@@ -138,7 +138,7 @@ class AnswerDataAccessService {
 
     }
 
-    public function getScoresOverviewForRoundForTeam(string $quizId,string $roundId, string $team = null) {
+    public function getScoresOverviewForRoundForTeam(string $quizId,string $team = null) {
         $q = $this->conn->prepare("SELECT question.round, SUM(IF(answer.points > 0,answer.points,0) ) as roundTotal
                                    FROM answer
                                    INNER JOIN question ON (question.quiz_UUID = answer.quiz_UUID AND question.UUID = answer.question_UUID)
@@ -151,5 +151,7 @@ class AnswerDataAccessService {
         return $q->fetchAll(PDO::FETCH_KEY_PAIR);
 
     }
+
+
 
 }
