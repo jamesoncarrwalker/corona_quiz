@@ -15,7 +15,7 @@ class MarksheetDataAccessService {
     }
 
     public function setMarksheetForRound(string $quizId, string $roundId, array $teams) {
-
+        if(!is_array($teams) || count($teams) < 1 ) return false;
         $pdoBindArray = [];
         $sql = [];
         $i = 0;

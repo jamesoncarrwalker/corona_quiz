@@ -1,7 +1,7 @@
 CREATE TABLE `quizAtTheDicks`.`assigned_marksheet` ( `UUID` VARCHAR(40) NOT NULL ,  `quiz_UUID` VARCHAR(40) NOT NULL ,  `round_UUID` VARCHAR(40) NOT NULL ,  `team_to_mark` VARCHAR(40) NOT NULL ,  `round_marked_by` VARCHAR(40) NOT NULL ,    PRIMARY KEY  (`UUID`))
 
-ALTER TABLE `round` ADD `show_answers` BOOLEAN NOT NULL DEFAULT FALSE AFTER `sort_order`;
+ALTER TABLE `round` ADD `show_answers` BOOLEAN NOT NULL DEFAULT FALSE AFTER `sort_order`;//done
 
-ALTER TABLE `quiz` ADD `created` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP AFTER `invitation_code`, ADD `updated` TIMESTAMP on update CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP AFTER `created`;
+ALTER TABLE `quiz` ADD `created` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP AFTER `invitation_code`, ADD `updated` TIMESTAMP on update CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP AFTER `created`;//done
 
-ALTER TABLE `question` CHANGE `points` `points` FLOAT(11) NOT NULL;
+ALTER TABLE `question` CHANGE `points` `points` FLOAT(11) NOT NULL;//done
